@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Radiação do Corpo Negro — Uma exploração visual da Física Moderna. Projeto do Grupo 2.">
+    <title>Radiação do Corpo Negro — Física Moderna | Grupo 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Barra de progresso -->
+    <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+    <!-- Navegação principal -->
+    <nav class="main-nav" id="mainNav" aria-label="Navegação da apresentação">
+        <div class="nav-brand">
+            <span class="brand-dot"></span>
+            <span class="brand-text">CORPO NEGRO</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#intro" data-section="0" class="nav-link active">01 · Introdução</a></li>
+            <li><a href="#corpo-negro" data-section="1" class="nav-link">02 · Corpo Negro</a></li>
+            <li><a href="#temperatura" data-section="2" class="nav-link">03 · Temperatura</a></li>
+            <li><a href="#sol" data-section="3" class="nav-link">04 · O Sol</a></li>
+            <li><a href="#energia" data-section="4" class="nav-link">05 · Energia Solar</a></li>
+            <li><a href="#conclusao" data-section="5" class="nav-link">06 · Conclusão</a></li>
+        </ul>
+        <div class="nav-controls">
+            <button class="nav-btn" id="prevBtn" aria-label="Seção anterior">‹</button>
+            <span class="nav-counter"><span id="currentSection">1</span>/6</span>
+            <button class="nav-btn" id="nextBtn" aria-label="Próxima seção">›</button>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- SEÇÃO 1: INTRODUÇÃO -->
+        <section id="intro" class="section section-intro active" data-index="0">
+            <div class="intro-bg">
+                <canvas id="introCanvas" aria-hidden="true"></canvas>
+            </div>
+            <div class="intro-content">
+                <div class="section-tag">
+                    <span class="tag-line"></span>
+                    <span>Física Moderna · Grupo 2</span>
+                </div>
+                <h1 class="intro-title">
+                    RADIAÇÃO DO<br>
+                    <span class="title-glow">CORPO NEGRO</span>
+                </h1>
+                <p class="intro-subtitle">Por que os objetos emitem radiação?</p>
+                <p class="intro-text">
+                    Todos os corpos com temperatura acima do <em>zero absoluto</em> emitem radiação eletromagnética.
+                    Essa emissão está relacionada à agitação térmica das partículas e à temperatura do objeto.
+                </p>
+                <div class="intro-visual">
+                    <div class="heated-object" id="heatedObject">
+                        <div class="heat-core"></div>
+                        <div class="heat-ring ring-1"></div>
+                        <div class="heat-ring ring-2"></div>
+                        <div class="heat-ring ring-3"></div>
+                    </div>
+                    <div class="heat-labels">
+                        <span class="heat-label" style="--c:#c0392b">~800 K · vermelho</span>
+                        <span class="heat-label" style="--c:#e67e22">~2000 K · laranja</span>
+                        <span class="heat-label" style="--c:#f1c40f">~5000 K · amarelo</span>
+                        <span class="heat-label" style="--c:#ffffff">~10000 K · branco</span>
+                    </div>
+                </div>
+                <button class="btn-primary" id="startBtn">
+                    Iniciar exploração
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            <div class="scroll-hint">
+                <span>role para continuar</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: CORPO NEGRO IDEAL -->
+        <section id="corpo-negro" class="section section-blackbody" data-index="1">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <h2>O que é um <span class="highlight">corpo negro ideal</span>?</h2>
+                    <p class="section-lead">Um modelo físico fundamental para compreender a emissão térmica.</p>
+                </div>
+
+                <div class="blackbody-layout">
+                    <div class="blackbody-text">
+                        <p>
+                            Um <strong>corpo negro ideal</strong> é um modelo físico de um objeto que
+                            <em>absorve toda a radiação eletromagnética</em> que incide sobre ele,
+                            independentemente do comprimento de onda ou da direção. Ele também é um
+                            <em>emissor ideal</em> de radiação térmica.
+                        </p>
+
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <div class="concept-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="9"/>
+                                        <path d="M12 3v18M3 12h18"/>
+                                    </svg>
+                                </div>
+                                <h3>Absorção total</h3>
+                                <p>Toda radiação incidente é absorvida — nada é refletido nem transmitido.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M3 12h18M15 6l6 6-6 6"/>
+                                    </svg>
+                                </div>
+                                <h3>Sem reflexão</h3>
+                                <p>Ausência total de reflexão e transmissão da radiação.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="4"/>
+                                        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>
+                                    </svg>
+                                </div>
+                                <h3>Emissão térmica</h3>
+                                <p>Emite radiação em um espectro contínuo característico de sua temperatura.</p>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M12 2v20M2 12h20"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </div>
+                                <h3>Temperatura ↔ Energia</h3>
+                                <p>Quanto maior a temperatura, maior a energia total emitida.</p>
+                            </div>
+                        </div>
+
+                        <div class="callout">
+                            <div class="callout-icon">ⓘ</div>
+                            <p>
+                                <strong>Importante:</strong> o corpo negro é um <em>modelo idealizado</em>.
+                                Quando aquecido, ele não é necessariamente preto — na verdade, ele brilha
+                                intensamente, e sua cor depende da temperatura.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="blackbody-visual">
+                        <div class="visual-frame">
+                            <canvas id="blackbodyCanvas" aria-label="Animação de um corpo negro absorvendo e emitindo radiação"></canvas>
+                            <div class="visual-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot incident"></span>
+                                    <span>Radiação incidente</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot absorbed"></span>
+                                    <span>Absorção total</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot emitted"></span>
+                                    <span>Emissão térmica</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: TEMPERATURA E ESPECTRO -->
+        <section id="temperatura" class="section section-temperature" data-index="2">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <h2>Temperatura e <span class="highlight">espectro de radiação</span></h2>
+                    <p class="section-lead">A temperatura determina tanto a intensidade quanto a distribuição espectral da radiação emitida.</p>
+                </div>
+
+                <div class="laws-grid">
+                    <div class="law-card">
+                        <div class="law-tag">Lei de Planck</div>
+                        <p>Descreve a distribuição espectral da radiação emitida por um corpo negro em função da temperatura e do comprimento de onda.</p>
+                        <div class="formula">
+                            B(λ,T) = <span class="frac"><span>2hc²</span><span>λ⁵</span></span> ·
+                            <span class="frac"><span>1</span><span>e<sup>hc/λkT</sup> − 1</span></span>
+                        </div>
+                    </div>
+                    <div class="law-card">
+                        <div class="law-tag">Lei do Deslocamento de Wien</div>
+                        <p>O comprimento de onda do pico de emissão é inversamente proporcional à temperatura absoluta.</p>
+                        <div class="formula">
+                            λ<sub>máx</sub> = <span class="frac"><span>b</span><span>T</span></span>
+                        </div>
+                        <p class="formula-note">b ≈ 2,898 × 10⁻³ m·K</p>
+                    </div>
+                    <div class="law-card">
+                        <div class="law-tag">Lei de Stefan-Boltzmann</div>
+                        <p>A potência emitida por unidade de área cresce com a quarta potência da temperatura absoluta.</p>
+                        <div class="formula">
+                            <span class="frac"><span>P</span><span>A</span></span> = σ T⁴
+                        </div>
+                        <p class="formula-note">σ ≈ 5,67 × 10⁻⁸ W·m⁻²·K⁻⁴</p>
+                    </div>
+                </div>
+
+                <div class="simulation-container">
+                    <div class="simulation-header">
+                        <h3>Simulação interativa do espectro de corpo negro</h3>
+                        <p>Arraste o controle para alterar a temperatura e observe como o espectro se modifica em tempo real.</p>
+                    </div>
+
+                    <div class="simulation-display">
+                        <div class="sim-info">
+                            <div class="info-block">
+                                <span class="info-label">Temperatura</span>
+                                <span class="info-value" id="tempValue">5000 K</span>
+                            </div>
+                            <div class="info-block">
+                                <span class="info-label">Pico de Wien (λ<sub>máx</sub>)</span>
+                                <span class="info-value" id="wienValue">580 nm</span>
+                            </div>
+                            <div class="info-block">
+                                <span class="info-label">Potência / área (σT⁴)</span>
+                                <span class="info-value" id="stefanValue">3,54 × 10⁷ W/m²</span>
+                            </div>
+                            <div class="info-block">
+                                <span class="info-label">Cor aparente</span>
+                                <span class="info-value info-color" id="colorSwatch">
+                                    <span class="swatch" id="colorSwatchDot"></span>
+                                    <span id="colorName">amarelo-branco</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <canvas id="planckCanvas"></canvas>
+                            <div class="chart-legend">
+                                <span class="chart-legend-item"><span class="dot uv"></span>UV</span>
+                                <span class="chart-legend-item"><span class="dot vis"></span>Visível</span>
+                                <span class="chart-legend-item"><span class="dot ir"></span>Infravermelho</span>
+                                <span class="chart-legend-item peak"><span class="dot peak-dot"></span>Pico de Wien</span>
+                            </div>
+                        </div>
+
+                        <div class="sim-controls">
+                            <label for="tempSlider">Temperatura (K)</label>
+                            <div class="slider-wrap">
+                                <input type="range" id="tempSlider" min="500" max="10000" value="5000" step="50" aria-label="Temperatura em Kelvin">
+                                <div class="slider-ticks">
+                                    <span>500</span>
+                                    <span>2500</span>
+                                    <span>5000</span>
+                                    <span>7500</span>
+                                    <span>10000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dynamic-explanation" id="dynamicExplanation">
+                            Ajuste a temperatura para ver a explicação dinâmica.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: O SOL -->
+        <section id="sol" class="section section-sun" data-index="3">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">04</span>
+                    <h2>Por que o Sol emite <span class="highlight">luz visível e infravermelha</span>?</h2>
+                    <p class="section-lead">A temperatura da superfície solar define o espectro da radiação que recebemos.</p>
+                </div>
+
+                <div class="sun-layout">
+                    <div class="sun-visual">
+                        <div class="sun-container">
+                            <div class="sun-corona"></div>
+                            <div class="sun-body">
+                                <div class="sun-surface"></div>
+                            </div>
+                            <div class="sun-temp">5.780 K</div>
+                        </div>
+                    </div>
+
+                    <div class="sun-text">
+                        <p>
+                            A superfície visível do Sol — a <em>fotosfera</em> — possui temperatura efetiva
+                            de aproximadamente <strong>5.780 K</strong>. Por isso, sua emissão térmica
+                            apresenta um espectro cujo pico está próximo da região visível.
+                        </p>
+
+                        <div class="calculation-box">
+                            <div class="calc-title">Aplicando a Lei de Wien:</div>
+                            <div class="calc-line">λ<sub>máx</sub> = b / T</div>
+                            <div class="calc-line">λ<sub>máx</sub> = (2,898 × 10⁻³ m·K) / 5.780 K</div>
+                            <div class="calc-line result">λ<sub>máx</sub> ≈ 5,01 × 10⁻⁷ m ≈ <strong>501 nm</strong></div>
+                        </div>
+
+                        <p>
+                            Esse valor está na região do <strong>verde-amarelo</strong> do espectro visível.
+                            Contudo, o Sol emite radiação em uma ampla faixa de comprimentos de onda:
+                        </p>
+
+                        <ul class="sun-list">
+                            <li><span class="bullet uv"></span>Radiação <strong>ultravioleta</strong> (λ &lt; 400 nm)</li>
+                            <li><span class="bullet vis"></span>Radiação <strong>visível</strong> (400 nm – 700 nm) — parcela significativa</li>
+                            <li><span class="bullet ir"></span>Radiação <strong>infravermelha</strong> (λ &gt; 700 nm) — também considerável</li>
+                        </ul>
+
+                        <div class="callout">
+                            <div class="callout-icon">ⓘ</div>
+                            <p>
+                                A atmosfera terrestre absorve parte da radiação — especialmente UV —,
+                                de modo que o espectro que chega à superfície é modificado em relação
+                                ao emitido pelo Sol.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="solar-spectrum">
+                    <h3>Espectro da radiação solar</h3>
+                    <div class="spectrum-bar">
+                        <div class="spectrum-segment uv">
+                            <span class="seg-label">UV</span>
+                            <span class="seg-range">&lt; 400 nm</span>
+                        </div>
+                        <div class="spectrum-segment visible">
+                            <span class="seg-label">Visível</span>
+                            <span class="seg-range">400 – 700 nm</span>
+                            <div class="peak-marker" style="left: 50%;">
+                                <span class="peak-line"></span>
+                                <span class="peak-text">λ<sub>máx</sub> ≈ 501 nm</span>
+                            </div>
+                        </div>
+                        <div class="spectrum-segment ir">
+                            <span class="seg-label">IV</span>
+                            <span class="seg-range">&gt; 700 nm</span>
+                        </div>
+                    </div>
+                    <div class="spectrum-scale">
+                        <span>100 nm</span>
+                        <span>400</span>
+                        <span>700</span>
+                        <span>1000</span>
+                        <span>2500 nm</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: ENERGIA SOLAR -->
+        <section id="energia" class="section section-energy" data-index="4">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">05</span>
+                    <h2>Aproveitamento da <span class="highlight">energia solar</span></h2>
+                    <p class="section-lead">Do conhecimento sobre radiação térmica às tecnologias que transformam luz em eletricidade e calor útil.</p>
+                </div>
+
+                <div class="tech-grid">
+                    <!-- Fotovoltaico -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <span class="tech-badge">01</span>
+                            <h3>Painéis fotovoltaicos</h3>
+                            <p class="tech-sub">Luz → Eletricidade</p>
+                        </div>
+                        <div class="tech-animation">
+                            <canvas id="pvCanvas" aria-label="Animação do efeito fotovoltaico"></canvas>
+                        </div>
+                        <div class="tech-steps">
+                            <div class="step">
+                                <span class="step-num">1</span>
+                                <p>Fótons da luz solar incidem sobre a célula de material semicondutor (silício).</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">2</span>
+                                <p>Fótons com energia suficiente arrancam elétrons dos átomos (efeito fotovoltaico).</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">3</span>
+                                <p>O campo elétrico interno separa as cargas, gerando corrente elétrica contínua.</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">4</span>
+                                <p>A energia elétrica é conduzida aos circuitos e pode ser utilizada ou armazenada.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Térmico -->
+                    <div class="tech-card">
+                        <div class="tech-header">
+                            <span class="tech-badge">02</span>
+                            <h3>Coletores solares térmicos</h3>
+                            <p class="tech-sub">Luz → Calor</p>
+                        </div>
+                        <div class="tech-animation">
+                            <canvas id="thermalCanvas" aria-label="Animação de um coletor solar térmico"></canvas>
+                        </div>
+                        <div class="tech-steps">
+                            <div class="step">
+                                <span class="step-num">1</span>
+                                <p>A radiação solar incide sobre a superfície absorvedora (geralmente escura).</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">2</span>
+                                <p>A energia da radiação é convertida em energia térmica, aquecendo o coletor.</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">3</span>
+                                <p>O calor é transferido para um fluido (geralmente água) que circula no interior.</p>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">4</span>
+                                <p>A água aquecida é armazenada e pode ser usada em residências ou indústrias.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-box">
+                    <h3>Comparação entre as tecnologias</h3>
+                    <div class="comparison-grid">
+                        <div class="comp-item">
+                            <div class="comp-icon">⚡</div>
+                            <h4>Fotovoltaico</h4>
+                            <p>Converte <strong>energia luminosa</strong> diretamente em <strong>energia elétrica</strong>, por meio do efeito fotovoltaico em materiais semicondutores.</p>
+                        </div>
+                        <div class="comp-item">
+                            <div class="comp-icon">🔥</div>
+                            <h4>Térmico</h4>
+                            <p>Aproveita a <strong>energia térmica</strong> da radiação para <strong>aquecer um fluido</strong>, sendo usado principalmente para aquecimento de água.</p>
+                        </div>
+                    </div>
+                    <p class="comp-conclusion">
+                        O conhecimento sobre <strong>radiação térmica</strong> — sua distribuição espectral,
+                        intensidade e interação com a matéria — é fundamental para o desenvolvimento
+                        e o aperfeiçoamento dessas tecnologias solares.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 6: CONCLUSÃO -->
+        <section id="conclusao" class="section section-conclusion" data-index="5">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">06</span>
+                    <h2>Síntese dos <span class="highlight">conceitos</span></h2>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-num">01</span>
+                        <p>Todo corpo acima do <strong>zero absoluto</strong> emite radiação térmica.</p>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-num">02</span>
+                        <p>O <strong>corpo negro ideal</strong> é um modelo utilizado para compreender essa emissão.</p>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-num">03</span>
+                        <p>A <strong>temperatura</strong> determina a distribuição espectral e influencia a intensidade da radiação.</p>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-num">04</span>
+                        <p>O <strong>Sol</strong> emite uma ampla faixa de radiação, com parcela significativa nas regiões visível e infravermelha.</p>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-num">05</span>
+                        <p>O conhecimento sobre radiação permite compreender e aperfeiçoar <strong>tecnologias de aproveitamento da energia solar</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="final-quote">
+                    <div class="quote-mark">“</div>
+                    <p>
+                        A compreensão da radiação térmica mostra como fenômenos fundamentais da
+                        <strong>Física Moderna</strong> estão diretamente relacionados às tecnologias
+                        que utilizamos para transformar a energia do Sol em benefícios para a sociedade.
+                    </p>
+                    <div class="quote-mark end">”</div>
+                </div>
+
+                <div class="credits">
+                    <p><strong>Grupo 2</strong> · Física Moderna</p>
+                    <p class="credits-sub">Projeto educacional interativo sobre Radiação do Corpo Negro</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
