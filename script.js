@@ -17,24 +17,55 @@
         a11yControls.hidden = isExpanded;
     });
 
-    function toggleA11y(feature) {
-        document.body.classList.toggle(feature === 'contrast' ? 'high-contrast' : 
-                                       feature === 'fontSize' ? 'large-text' : 
-                                       feature === 'dyslexic' ? 'dyslexic-font' : 'reduce-motion');
-        localStorage.setItem('a11y_' + feature, document.body.classList.contains(feature === 'contrast' ? 'high-contrast' : feature === 'fontSize' ? 'large-text' : feature === 'dyslexic' ? 'dyslexic-font' : 'reduce-motion'));
+    const A11Y_CLASSES = {
+        contrast: 'high-contrast',
+        fontSize: 'large-text',
+        dyslexic: 'dyslexic-font',
+        motion: 'reduce-motion'
+    };
+    const a11yButtons = document.querySelectorAll('[data-a11y]');
+    const a11yReset = document.querySelector('[data-a11y-reset]');
+
+    function readA11yPref(feature) {
+        try { return localStorage.getItem('a11y_' + feature) === 'true'; } catch (e) { return false; }
     }
 
-    function resetA11y() {
-        document.body.classList.remove('high-contrast', 'large-text', 'dyslexic-font', 'reduce-motion');
-        ['contrast', 'fontSize', 'dyslexic', 'motion'].forEach(f => localStorage.removeItem('a11y_' + f));
+    function writeA11yPref(feature, enabled) {
+        try {
+            if (enabled) localStorage.setItem('a11y_' + feature, 'true');
+            else localStorage.removeItem('a11y_' + feature);
+        } catch (e) { /* armazenamento indisponível: o modo vale só nesta visita */ }
+    }
+
+    function applyA11y(feature, enabled) {
+        document.body.classList.toggle(A11Y_CLASSES[feature], enabled);
+        // O tamanho da fonte precisa valer na raiz, porque o texto é medido em rem.
+        if (feature === 'fontSize') document.documentElement.classList.toggle(A11Y_CLASSES[feature], enabled);
+        a11yButtons.forEach(btn => {
+            if (btn.dataset.a11y === feature) btn.setAttribute('aria-pressed', String(enabled));
+        });
+    }
+
+    a11yButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const feature = btn.dataset.a11y;
+            const enabled = btn.getAttribute('aria-pressed') !== 'true';
+            applyA11y(feature, enabled);
+            writeA11yPref(feature, enabled);
+        });
+    });
+
+    if (a11yReset) {
+        a11yReset.addEventListener('click', () => {
+            Object.keys(A11Y_CLASSES).forEach(feature => {
+                applyA11y(feature, false);
+                writeA11yPref(feature, false);
+            });
+        });
     }
 
     // Restaurar preferências
-    ['contrast', 'fontSize', 'dyslexic', 'motion'].forEach(f => {
-        if (localStorage.getItem('a11y_' + f) === 'true') {
-            document.body.classList.add(f === 'contrast' ? 'high-contrast' : f === 'fontSize' ? 'large-text' : f === 'dyslexic' ? 'dyslexic-font' : 'reduce-motion');
-        }
-    });
+    Object.keys(A11Y_CLASSES).forEach(feature => applyA11y(feature, readA11yPref(feature)));
 
     // ===== 2. NAVEGAÇÃO =====
     const sections = document.querySelectorAll('.section');
@@ -82,26 +113,40 @@
         progressBar.style.width = ((h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100) + '%';
     }, { passive: true });
 
-    // ===== 3. UTILITÁRIO CANVAS ROBUSTO (ResizeObserver) =====
+    // ===== 3. UTILITÁRIO CANVAS: cada canvas é configurado uma única vez =====
+    const canvasRegistry = new Map();
+
     function setupCanvas(canvasId, drawFn) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return null;
-        const ctx = canvas.getContext('2d');
+
+        const existing = canvasRegistry.get(canvasId);
+        if (existing) {
+            existing.draw = drawFn;
+            return existing;
+        }
+
+        const view = { canvas, ctx: canvas.getContext('2d'), draw: drawFn, width: 0, height: 0 };
+        canvasRegistry.set(canvasId, view);
+
         function resize() {
             const rect = canvas.getBoundingClientRect();
             if (rect.width === 0 || rect.height === 0) return;
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.scale(dpr, dpr);
-            drawFn();
+            const width = Math.round(rect.width * dpr);
+            const height = Math.round(rect.height * dpr);
+            if (width === view.width && height === view.height) return;
+            view.width = width;
+            view.height = height;
+            canvas.width = width;
+            canvas.height = height;
+            view.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            view.draw();
         }
-        const obs = new ResizeObserver(() => requestAnimationFrame(resize));
-        obs.observe(canvas);
-        if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', resize);
-        else resize();
-        return { canvas, ctx };
+
+        new ResizeObserver(() => requestAnimationFrame(resize)).observe(canvas);
+        resize();
+        return view;
     }
 
     // ===== 4. SIMULADOR 1: LEI DE PLANCK (Adaptado) =====
@@ -114,10 +159,11 @@
         return c1 / (Math.pow(lambda, 5) * (Math.exp(c2) - 1));
     }
 
+    let planckView = null;
+
     function drawPlanck() {
-        const setup = setupCanvas('planckCanvas', drawPlanck);
-        if (!setup) return;
-        const ctx = setup.ctx, w = setup.canvas.clientWidth, h = setup.canvas.clientHeight;
+        if (!planckView) return;
+        const ctx = planckView.ctx, w = planckView.canvas.clientWidth, h = planckView.canvas.clientHeight;
         const T = +bbSlider.value;
         document.getElementById('bbTempVal').textContent = T;
 
@@ -166,10 +212,11 @@
     const peMat = document.getElementById('peMaterial');
     let pePhotons = [], peElectrons = [], peTime = 0;
 
+    let peView = null;
+
     function drawPE() {
-        const setup = setupCanvas('peCanvas', drawPE);
-        if (!setup) return;
-        const ctx = setup.ctx, w = setup.canvas.clientWidth, h = setup.canvas.clientHeight;
+        if (!peView) return;
+        const ctx = peView.ctx, w = peView.canvas.clientWidth, h = peView.canvas.clientHeight;
         ctx.clearRect(0, 0, w, h);
 
         const freq = +peFreq.value, int = +peInt.value, phi = +peMat.value;
@@ -222,6 +269,36 @@
 
     // ===== 6. SIMULADOR 3: BALANÇO TÉRMICO DA PISCINA =====
     const runSimBtn = document.getElementById('runSimBtn');
+    let thermalView = null;
+    let thermalRun = null;
+
+    function drawThermal() {
+        if (!thermalView || !thermalRun) return;
+        const { labels, dataT } = thermalRun;
+        const ctx = thermalView.ctx, w = thermalView.canvas.clientWidth, h = thermalView.canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+        const ml = 40, mr = 20, mt = 20, mb = 40, pw = w - ml - mr, ph = h - mt - mb;
+
+        const minT = Math.floor(Math.min(...dataT) - 1);
+        const maxT = Math.ceil(Math.max(...dataT) + 1);
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.moveTo(ml, mt); ctx.lineTo(ml, mt+ph); ctx.lineTo(ml+pw, mt+ph); ctx.stroke();
+
+        ctx.beginPath(); ctx.strokeStyle = '#57C5B6'; ctx.lineWidth = 3;
+        dataT.forEach((t, i) => {
+            const x = ml + (i / (dataT.length - 1)) * pw;
+            const y = mt + ph - ((t - minT) / (maxT - minT)) * ph;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+
+            // Rótulos de hora
+            if (i % 4 === 0) {
+                ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(labels[i], x, mt + ph + 15);
+            }
+        });
+        ctx.stroke();
+    }
+
     if (runSimBtn) {
         runSimBtn.addEventListener('click', () => {
             const vol = +document.getElementById('simVol').value; // Litros
@@ -268,37 +345,14 @@
                 currentT += deltaT;
             }
 
-            // Desenhar gráfico simples no canvas
-            const setup = setupCanvas('thermalSimCanvas', () => {});
-            if (setup) {
-                const ctx = setup.ctx, w = setup.canvas.clientWidth, h = setup.canvas.clientHeight;
-                ctx.clearRect(0, 0, w, h);
-                const ml = 40, mr = 20, mt = 20, mb = 40, pw = w - ml - mr, ph = h - mt - mb;
-                
-                const minT = Math.floor(Math.min(...dataT) - 1);
-                const maxT = Math.ceil(Math.max(...dataT) + 1);
-                
-                ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.moveTo(ml, mt); ctx.lineTo(ml, mt+ph); ctx.lineTo(ml+pw, mt+ph); ctx.stroke();
-                
-                ctx.beginPath(); ctx.strokeStyle = '#57C5B6'; ctx.lineWidth = 3;
-                dataT.forEach((t, i) => {
-                    const x = ml + (i / (dataT.length - 1)) * pw;
-                    const y = mt + ph - ((t - minT) / (maxT - minT)) * ph;
-                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-                    
-                    // Rótulos de hora
-                    if (i % 4 === 0) {
-                        ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-                        ctx.fillText(labels[i], x, mt + ph + 15);
-                    }
-                });
-                ctx.stroke();
+            // O desenho fica separado do cálculo para sobreviver a redimensionamentos
+            thermalRun = { labels, dataT };
+            drawThermal();
 
-                const finalT = dataT[dataT.length - 1];
-                document.getElementById('thermalSimResults').innerHTML = 
-                    `Temperatura Final Estimada: <strong>${finalT} °C</strong> | Variação: <strong>${(finalT - tInit).toFixed(1)} °C</strong><br>
-                    <small>A capa térmica reduziu as perdas por evaporação/convecção, resultando em maior ganho líquido.</small>`;
-            }
+            const finalT = dataT[dataT.length - 1];
+            document.getElementById('thermalSimResults').innerHTML =
+                `Temperatura Final Estimada: <strong>${finalT} °C</strong> | Variação: <strong>${(finalT - tInit).toFixed(1)} °C</strong><br>
+                <small>A capa térmica reduziu as perdas por evaporação/convecção, resultando em maior ganho líquido.</small>`;
         });
     }
 
@@ -402,6 +456,9 @@
 
     // ===== INICIALIZAÇÃO =====
     function init() {
+        planckView = setupCanvas('planckCanvas', drawPlanck);
+        peView = setupCanvas('peCanvas', drawPE);
+        thermalView = setupCanvas('thermalSimCanvas', drawThermal);
         drawPlanck();
         drawPE();
     }

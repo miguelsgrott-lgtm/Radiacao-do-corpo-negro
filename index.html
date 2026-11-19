@@ -35,11 +35,11 @@
     <aside class="a11y-panel" id="a11yPanel" aria-label="Painel de Acessibilidade">
         <button class="a11y-toggle" id="a11yToggle" aria-expanded="false" aria-controls="a11yControls">♿ Acessibilidade</button>
         <div class="a11y-controls" id="a11yControls" hidden>
-            <button onclick="toggleA11y('contrast')" aria-label="Alternar alto contraste">Alto Contraste</button>
-            <button onclick="toggleA11y('fontSize')" aria-label="Aumentar tamanho da fonte">Aumentar Fonte</button>
-            <button onclick="toggleA11y('dyslexic')" aria-label="Ativar fonte para dislexia">Fonte OpenDyslexic</button>
-            <button onclick="toggleA11y('motion')" aria-label="Reduzir animações">Reduzir Movimento</button>
-            <button onclick="resetA11y()" aria-label="Restaurar configurações padrão">Restaurar Padrão</button>
+            <button type="button" data-a11y="contrast" aria-pressed="false">Alto Contraste</button>
+            <button type="button" data-a11y="fontSize" aria-pressed="false">Aumentar Fonte</button>
+            <button type="button" data-a11y="dyslexic" aria-pressed="false">Fonte OpenDyslexic</button>
+            <button type="button" data-a11y="motion" aria-pressed="false">Reduzir Movimento</button>
+            <button type="button" data-a11y-reset>Restaurar Padrão</button>
         </div>
     </aside>
 

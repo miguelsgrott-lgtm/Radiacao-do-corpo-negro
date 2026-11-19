@@ -19,6 +19,7 @@
 
 /* ===== RESET & BASE ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body { 
     font-family: var(--font-text); 
@@ -49,7 +50,7 @@ body {
     background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
     padding: 8px; border-radius: 6px; cursor: pointer; text-align: left;
 }
-.a11y-controls button:hover, .a11y-controls button:focus { background: var(--turquoise); color: var(--bg-dark); }
+.a11y-controls button:hover, .a11y-controls button:focus, .a11y-controls button[aria-pressed="true"] { background: var(--turquoise); color: var(--bg-dark); }
 
 /* Classes de Acessibilidade Ativadas via JS */
 body.high-contrast { 
@@ -57,7 +58,7 @@ body.high-contrast {
     --text-muted: #FFFF00; --water-blue: #00FFFF; --sun-orange: #FFA500;
 }
 body.high-contrast * { border-color: #FFFF00 !important; }
-body.large-text { font-size: 125%; }
+html.large-text { font-size: 125%; }
 body.dyslexic-font { font-family: var(--font-dyslexic) !important; }
 body.dyslexic-font * { font-family: var(--font-dyslexic) !important; letter-spacing: 0.05em; line-height: 1.8; }
 body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after {
