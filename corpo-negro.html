@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Radiação do Corpo Negro | Projeto Integrador CEP</title>
+    <meta name="description" content="Corpo negro, lei de Kirchhoff, emissividade, catástrofe do ultravioleta e leis de Planck, Wien e Stefan-Boltzmann, com simuladores e o caso do coletor solar.">
+    <meta name="theme-color" content="#050810">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='11' cy='11' r='8' fill='%23FF7626'/%3E%3Cpath d='M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z' fill='%2357C5B6'/%3E%3C/svg%3E">
+    <script>(function(){var d=document.documentElement;d.classList.add('js');try{var p=JSON.parse(localStorage.getItem('cep-preferencias')||'{}');for(var k in p){if(/^(tamanho|linhas|letras|contraste|dislexia|movimento)$/.test(k))d.setAttribute('data-'+k,p[k]);}}catch(e){}})();</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-pagina="corpo-negro">
+    <header class="cabecalho" data-menu="fechado">
+        <a class="pular" href="#conteudo">Pular para o conteúdo principal</a>
+        <div class="barra-progresso" id="barraProgresso" aria-hidden="true"></div>
+        <div class="cabecalho__barra">
+            <a class="marca" href="index.html">
+                <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8" fill="#FF7626"/><path d="M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z" fill="#57C5B6"/></svg>
+                <span>CEP Integrador</span>
+            </a>
+            <button id="botaoMenu" class="botao-barra" type="button" aria-expanded="false" aria-controls="navPrincipal">Menu</button>
+            <nav id="navPrincipal" class="nav-principal" aria-label="Principal">
+                <ul class="menu">
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#ondas">Ondas</a></li>
+                    <li><a href="corpo-negro.html" aria-current="page">Corpo Negro</a></li>
+                    <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                    <li><a href="index.html#robotica">Robótica</a></li>
+                    <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a class="menu__destaque" href="piscina-cep.html">Piscina do CEP</a></li>
+                </ul>
+            </nav>
+            <div class="acessibilidade">
+                <button id="botaoAcessibilidade" class="botao-barra" type="button" aria-expanded="false" aria-controls="painelAcessibilidade">Acessibilidade</button>
+                <div id="painelAcessibilidade" class="painel" role="group" aria-labelledby="painelTitulo" hidden>
+                    <p id="painelTitulo" class="painel__titulo">Ajustes de leitura</p>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Tamanho da fonte</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-tamanho" value="100" checked>100%</label>
+                            <label><input type="radio" name="pref-tamanho" value="125">125%</label>
+                            <label><input type="radio" name="pref-tamanho" value="150">150%</label>
+                            <label><input type="radio" name="pref-tamanho" value="175">175%</label>
+                            <label><input type="radio" name="pref-tamanho" value="200">200%</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre linhas</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-linhas" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-linhas" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-linhas" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre letras</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-letras" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-letras" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-letras" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <div class="alternancias">
+                        <button class="alternancia" type="button" data-preferencia="contraste" data-valor="alto" data-nome="Alto contraste" aria-pressed="false">Alto contraste</button>
+                        <button class="alternancia" type="button" data-preferencia="dislexia" data-valor="ativo" data-nome="Fonte para dislexia" aria-pressed="false">Fonte para dislexia</button>
+                        <button class="alternancia" type="button" data-preferencia="movimento" data-valor="reduzido" data-nome="Reduzir movimento" aria-pressed="false">Reduzir movimento</button>
+                    </div>
+                    <p class="painel__acoes">
+                        <button id="abrirVlibras" class="botao botao--pequeno" type="button">Abrir VLibras</button>
+                        <button id="restaurarPreferencias" class="botao botao--secundario botao--pequeno" type="button">Restaurar padrão</button>
+                    </p>
+                    <p class="painel__aviso">Os ajustes ficam guardados neste navegador e valem nas três páginas.</p>
+                </div>
+            </div>
+        </div>
+        <p id="anuncioGlobal" class="so-leitor" role="status"></p>
+    </header>
+
+    <main id="conteudo" tabindex="-1">
+        <noscript><p class="aviso">Os simuladores e os ajustes de leitura precisam de JavaScript. Todo o texto continua disponível.</p></noscript>
+        <section aria-labelledby="corpoTitulo">
+            <div class="capa__cena">
+                <canvas id="cenaCapa" data-cena="corpo-negro" role="img" aria-label="Cena animada: uma cavidade aquecida muda de cor enquanto a temperatura sobe e desce, e o pico da curva de emissão se desloca."></canvas>
+                <button id="pausarCena" class="botao botao--pequeno botao--sobre-cena capa__pausa so-js" type="button">Pausar animação</button>
+            </div>
+            <div class="capa__texto">
+                <h1 id="corpoTitulo">Radiação do corpo negro</h1>
+                <div class="capa__apoio">
+                    <p>Tudo que tem temperatura emite radiação. O corpo negro é o modelo que mostra como essa emissão depende da temperatura.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="intuicao" class="faixa campo-noite" aria-labelledby="intuicaoTitulo">
+            <div class="largura eixo">
+                <h2 id="intuicaoTitulo">Tudo brilha, mesmo sem a gente ver</h2>
+                <div class="eixo__nota">
+                    <p class="numero-grande">9,4 µm</p>
+                    <p>É onde fica o pico da emissão da água a 35 °C, muito além do que o olho enxerga.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">Aqueça um pedaço de ferro: primeiro ele parece igual, depois fica vermelho, laranja e quase branco.</p>
+                    <p>O ferro já emitia radiação antes de brilhar. Ela estava no infravermelho, invisível para nós. Conforme a temperatura sobe, duas coisas acontecem: a emissão total cresce muito, e o pico se desloca para ondas mais curtas, até entrar no visível.</p>
+                    <p>A água da piscina, o seu corpo e as paredes da sala fazem o mesmo, em temperaturas bem menores. É assim que uma câmera térmica enxerga no escuro. Para entender esse comportamento sem depender do material, a física criou um objeto ideal: o corpo negro.</p>
+                    <p><strong>Conexão com a piscina:</strong> o Sol, a cerca de 5.772 K, tem pico de emissão no visível. A água da piscina, perto de 300 K, é muito mais fria e emite quase exclusivamente no infravermelho longo, o que faz parte da perda de calor para o ambiente, especialmente à noite.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cavidade" class="faixa" aria-labelledby="cavidadeTitulo">
+            <div class="largura eixo">
+                <h2 id="cavidadeTitulo">O que é um corpo negro</h2>
+                <div class="eixo__nota">
+                    <figure class="diagrama">
+                        <svg viewBox="0 0 520 300" role="img" aria-labelledby="cavTitulo cavDesc">
+                            <title id="cavTitulo">Cavidade com um pequeno furo</title>
+                            <desc id="cavDesc">Um raio de luz entra por um furo na parede direita de uma caixa e bate várias vezes nas paredes internas, enfraquecendo a cada reflexão, até quase não restar nada para sair.</desc>
+                            <path d="M440 135V40H60V260H440V165" fill="none" stroke-width="8" style="stroke:var(--tinta)"/>
+                            <g fill="none" style="stroke:var(--solar-yellow)">
+                                <path d="M515 150L250 45" stroke-width="5"/>
+                                <path d="M250 45L65 175" stroke-width="4"/>
+                                <path d="M65 175L235 255" stroke-width="3"/>
+                                <path d="M235 255L435 95" stroke-width="2"/>
+                                <path d="M435 95L300 45" stroke-width="1"/>
+                            </g>
+                            <text class="svg-texto" x="110" y="130" font-size="20">a cada batida,</text>
+                            <text class="svg-texto" x="110" y="156" font-size="20">a parede absorve</text>
+                            <text class="svg-texto" x="110" y="182" font-size="20">mais um pouco</text>
+                            <text class="svg-texto" x="460" y="190" font-size="20" text-anchor="middle">furo</text>
+                        </svg>
+                        <figcaption>Quase toda a radiação que entra pelo furo acaba absorvida lá dentro.</figcaption>
+                    </figure>
+                </div>
+                <div class="eixo__corpo">
+                    <p>Um <strong>corpo negro</strong> é um objeto ideal que absorve toda a radiação que recebe, em qualquer comprimento de onda e direção. Por isso, em uma dada temperatura, é também o emissor mais eficiente possível.</p>
+                    <p>O nome engana: um corpo negro quente não parece preto. O Sol, com sua superfície a cerca de 5.772 K, se aproxima bastante desse modelo. Na prática, a superfície absorvedora de um coletor solar busca se aproximar desse comportamento na faixa da luz solar, embora sempre haja alguma reflexão.</p>
+                    <p><strong>Por que uma cavidade o aproxima?</strong> Imagine uma caixa fechada com um furo pequeno. A radiação que entra bate nas paredes e, a cada batida, parte é absorvida. A chance de ela achar o caminho de volta é mínima, então o furo se comporta como uma superfície que absorve quase tudo. Se as paredes forem aquecidas, a radiação lá dentro entra em equilíbrio com elas, e o que escapa pelo furo tem um espectro que depende da temperatura, não do material da caixa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="kirchhoff" class="faixa campo-azul" aria-labelledby="kirchhoffTitulo">
+            <div class="largura eixo">
+                <h2 id="kirchhoffTitulo">Quem absorve bem, emite bem</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">ε(λ, T) = α(λ, T)</span><span class="formula__texto">Lei de Kirchhoff: em cada comprimento de onda, a emissividade ε é igual à absortividade α.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p>Coloque dois objetos dentro de uma cavidade fechada, em equilíbrio. Se um deles absorvesse mais do que emite, esquentaria sozinho às custas do outro, o que a segunda lei da termodinâmica proíbe. Logo, cada corpo precisa emitir na mesma medida em que absorve.</p>
+                    <p>O detalhe decisivo é <strong>"em cada comprimento de onda"</strong>. Uma superfície pode absorver muito no visível e emitir pouco no infravermelho sem violar a lei, porque são comprimentos de onda diferentes. É nesse detalhe que se baseia a superfície seletiva dos coletores solares.</p>
+                    <details>
+                        <summary>Ver o raciocínio da lei de Kirchhoff</summary>
+                        <div class="details__corpo">
+                            <p>Dentro da cavidade em equilíbrio à temperatura T, cada ponto da superfície recebe, em cada comprimento de onda, a irradiação de um corpo negro, M<sub>λ</sub>(T). Ele absorve α · M<sub>λ</sub>(T) e emite ε · M<sub>λ</sub>(T).</p>
+                            <p>No equilíbrio a temperatura não muda, então o que sai é igual ao que entra: ε · M<sub>λ</sub> = α · M<sub>λ</sub>. Dividindo por M<sub>λ</sub>, fica ε = α.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="emissividade" class="faixa" aria-labelledby="emissividadeTitulo">
+            <div class="largura eixo">
+                <h2 id="emissividadeTitulo">Corpo cinza e emissividade</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">M = ε · σ · T⁴</span><span class="formula__texto">Potência emitida por m². A emissividade ε vai de 0 a 1, e T fica em kelvin.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p>Objetos reais emitem menos que um corpo negro na mesma temperatura. A <strong>emissividade</strong> mede essa fração. Quando ela é aproximadamente igual em todos os comprimentos de onda, chamamos o objeto de <strong>corpo cinza</strong>, uma simplificação muito útil.</p>
+                    <div class="rolagem" tabindex="0" role="region" aria-label="Tabela de emissividades">
+                        <table>
+                            <caption>Emissividade típica, perto de 300 K</caption>
+                            <thead><tr><th scope="col">Superfície</th><th scope="col" class="numero">Emissividade</th></tr></thead>
+                            <tbody>
+                                <tr><th scope="row">Água</th><td class="numero">0,95 a 0,963</td></tr>
+                                <tr><th scope="row">Gelo liso</th><td class="numero">0,966</td></tr>
+                                <tr><th scope="row">Vidro liso</th><td class="numero">0,92 a 0,94</td></tr>
+                                <tr><th scope="row">Tinta preta de silicone</th><td class="numero">0,93</td></tr>
+                                <tr><th scope="row">Alumínio muito polido</th><td class="numero">0,039 a 0,057</td></tr>
+                                <tr><th scope="row">Cobre polido</th><td class="numero">0,023 a 0,052</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="nota">Fonte: <a href="https://www.engineeringtoolbox.com/emissivity-coefficients-d_447.html">Engineering ToolBox</a>. Este site usa ε = 0,95 para a água nos exemplos, o início dessa faixa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="catastrofe" class="faixa campo-noite" aria-labelledby="catastrofeTitulo">
+            <div class="largura eixo">
+                <h2 id="catastrofeTitulo">A catástrofe do ultravioleta</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">B<sub>λ</sub> = 2 c k T / λ⁴</span><span class="formula__texto">Previsão clássica de Rayleigh e Jeans. Quanto menor λ, maior o resultado, sem limite.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p>Na virada do século XX, a física clássica tentou calcular o espectro da cavidade. O resultado funcionava para ondas longas, mas previa emissão cada vez maior nas ondas curtas e uma energia total infinita.</p>
+                    <p>Os experimentos mostravam outra coisa: a curva sobe, atinge um pico e despenca. Se a previsão clássica estivesse certa, qualquer objeto morno seria uma fonte intensa de ultravioleta. Esse fracasso ficou conhecido como <strong>catástrofe do ultravioleta</strong>. No simulador abaixo é possível ver as duas curvas juntas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="hipotese-planck" class="faixa" aria-labelledby="hipoteseTitulo">
+            <div class="largura eixo">
+                <h2 id="hipoteseTitulo">A hipótese de Planck</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">E = n · h · f</span><span class="formula__texto">Com n = 0, 1, 2, 3... A energia é trocada em pacotes de tamanho h · f.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p>Em 1900, Max Planck encontrou uma fórmula que descrevia os dados e, para justificá-la, supôs que a energia dos osciladores nas paredes só muda em pacotes, os <strong>quanta</strong>.</p>
+                    <p>A intuição é econômica. Em frequências altas, um único pacote custa muito mais do que a energia térmica típica, próxima de k · T. Esses modos quase nunca são excitados, e a curva cai nas ondas curtas. A ideia abriu o caminho da física quântica e rendeu a Planck o <a href="https://www.nobelprize.org/prizes/physics/1918/planck/facts/">Nobel de Física de 1918</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="leis" class="faixa campo-azul" aria-labelledby="leisTitulo">
+            <div class="largura">
+                <h2 id="leisTitulo" class="titulo-secao">As três leis</h2>
+                <div class="ficha">
+                    <div>
+                        <h3>Lei de Planck</h3>
+                        <p class="formula" role="img" aria-label="B de lambda e T é igual a dois h c ao quadrado sobre lambda à quinta, vezes um sobre, e elevado a h c sobre lambda k T, menos um.">
+                            <span class="formula__conta">B<sub>λ</sub>(T) = <span class="fracao"><span>2 h c²</span><span>λ⁵</span></span> · <span class="fracao"><span>1</span><span>e<sup>h c / (λ k T)</sup> − 1</span></span></span>
+                        </p>
+                        <p>Dá a radiância em cada comprimento de onda, e dela saem as outras duas leis. Multiplicada por π, torna-se a potência emitida por m² e por unidade de comprimento de onda, a grandeza do gráfico abaixo.</p>
+                        <details>
+                            <summary>Ver de onde vem a lei de Planck</summary>
+                            <div class="details__corpo">
+                                <p>O número de modos de onda por volume e por comprimento de onda em uma cavidade é 8π / λ⁴. A física clássica dá a cada modo a energia média k · T, o que leva à fórmula de Rayleigh-Jeans.</p>
+                                <p>Com pacotes de energia h · f, a energia média por modo passa a ser h f / (e<sup>h f / k T</sup> − 1). Quando h f é muito menor que k T, esse valor volta a ser k T. Quando h f é muito maior, ele tende a zero, e a catástrofe desaparece.</p>
+                            </div>
+                        </details>
+                    </div>
+                    <div>
+                        <h3>Lei de Wien</h3>
+                        <p class="formula"><span class="formula__conta">λ<sub>máx</sub> · T = b</span><span class="formula__texto">b = 2,897771955 × 10⁻³ m·K. Mais quente, pico em onda mais curta.</span></p>
+                        <details>
+                            <summary>Ver a dedução da lei de Wien</summary>
+                            <div class="details__corpo">
+                                <p>Derivando a lei de Planck em relação a λ e igualando a zero, com x = h c / (λ k T), chega-se a x · eˣ / (eˣ − 1) = 5. A solução é x ≈ 4,965, logo λ<sub>máx</sub> · T = h c / (4,965 k) = b.</p>
+                            </div>
+                        </details>
+                    </div>
+                    <div>
+                        <h3>Lei de Stefan-Boltzmann</h3>
+                        <p class="formula"><span class="formula__conta">M = σ · T⁴</span><span class="formula__texto">σ = 5,670374419 × 10⁻⁸ W/(m²·K⁴). Dobrar T em kelvin multiplica a emissão por 16.</span></p>
+                        <details>
+                            <summary>Ver a dedução de Stefan-Boltzmann</summary>
+                            <div class="details__corpo">
+                                <p>Integrando π · B<sub>λ</sub> em todos os comprimentos de onda e usando ∫ x³ / (eˣ − 1) dx = π⁴ / 15, de 0 a infinito, obtém-se M = σ T⁴, com σ = 2 π⁵ k⁴ / (15 h³ c²).</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="simulador-planck" class="faixa campo-noite" aria-labelledby="planckTitulo">
+            <div class="largura">
+                <h2 id="planckTitulo" class="simulador__titulo">Simulador: leis de Planck e Wien</h2>
+                <p class="simulador__observe"><strong>O que observar:</strong> ao aquecer o corpo, a curva inteira sobe e o pico anda para a esquerda. Os dois eixos são logarítmicos para que o Sol e a água caibam no mesmo gráfico.</p>
+                <form id="simPlanck" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do gráfico de Planck</legend>
+                        <div class="campo">
+                            <label for="planckTemperatura">Temperatura do corpo</label>
+                            <output id="planckTemperaturaSaida" for="planckTemperatura" aria-live="off">5.772 K (5.499 °C)</output>
+                            <input id="planckTemperatura" type="range" min="200" max="10000" step="1" value="5772">
+                        </div>
+                        <div class="grupo-botoes" role="group" aria-label="Temperaturas de exemplo">
+                            <button class="botao-opcao" type="button" data-temperatura="293.15" aria-pressed="false">Água a 20 °C</button>
+                            <button class="botao-opcao" type="button" data-temperatura="308.15" aria-pressed="false">Água a 35 °C</button>
+                            <button class="botao-opcao" type="button" data-temperatura="2800" aria-pressed="false">Filamento a 2.800 K</button>
+                            <button class="botao-opcao" type="button" data-temperatura="5772" aria-pressed="true">Sol</button>
+                        </div>
+                        <label class="verificacao"><input id="planckSol" type="checkbox" checked>Mostrar a curva do Sol</label>
+                        <label class="verificacao"><input id="planckAgua" type="checkbox" checked>Mostrar a curva da água a 35 °C</label>
+                        <label class="verificacao"><input id="planckRJ" type="checkbox">Mostrar a previsão clássica</label>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="tela">
+                            <canvas id="graficoPlanck" role="img" aria-label="Gráfico em escala logarítmica da potência emitida em função do comprimento de onda, de 0,1 a 100 micrômetros." aria-describedby="planckResumo"></canvas>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Pico (Wien)</dt><dd id="planckPico">502 nm</dd></div>
+                            <div><dt>Faixa do pico</dt><dd id="planckFaixa">visível</dd></div>
+                            <div><dt>Potência (Stefan-Boltzmann)</dt><dd id="planckPotencia">6,29 × 10⁷ W/m²</dd></div>
+                            <div><dt>Parte no visível</dt><dd id="planckVisivel">43,8%</dd></div>
+                        </dl>
+                        <p id="planckResumo" class="sim__resumo" aria-live="polite">A 5.772 kelvin, o pico de emissão fica em 502 nm, no visível.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="sol-agua" class="faixa" aria-labelledby="solAguaTitulo">
+            <div class="largura">
+                <h2 id="solAguaTitulo" class="simulador__titulo">Comparativo: Sol × água</h2>
+                <p class="simulador__observe"><strong>O que observar:</strong> cada curva foi dividida pelo próprio pico para que as duas formas possam ser comparadas. Quase não há sobreposição. Por isso a água pode receber luz solar e emitir em outra faixa.</p>
+                <form id="simSolAgua" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controle do comparativo</legend>
+                        <div class="campo">
+                            <label for="saAgua">Temperatura da água</label>
+                            <select id="saAgua"><option value="20">20 °C</option><option value="28">28 °C</option><option value="35" selected>35 °C, cenário do grupo</option></select>
+                        </div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                        <details>
+                            <summary>Ver os dados em tabela</summary>
+                            <div class="details__corpo rolagem" tabindex="0" role="region" aria-label="Dados do comparativo">
+                                <table>
+                                    <thead><tr><th scope="col">Grandeza</th><th scope="col" class="numero">Sol</th><th scope="col" class="numero">Água</th></tr></thead>
+                                    <tbody>
+                                        <tr><th scope="row">Pico</th><td class="numero" id="saPicoSol">502 nm</td><td class="numero" id="saPicoAgua">9,40 µm</td></tr>
+                                        <tr><th scope="row">σT⁴</th><td class="numero" id="saPotSol">6,29 × 10⁷ W/m²</td><td class="numero" id="saPotAgua">511,3 W/m²</td></tr>
+                                        <tr><th scope="row">No visível</th><td class="numero" id="saVisSol">43,8%</td><td class="numero" id="saVisAgua">menos de 0,01%</td></tr>
+                                        <tr><th scope="row">Acima de 3 µm</th><td class="numero" id="saIvSol">2,1%</td><td class="numero" id="saIvAgua">100,0%</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </details>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="tela">
+                            <canvas id="graficoSolAgua" role="img" aria-label="Duas curvas normalizadas: a do Sol tem pico perto de 0,5 micrômetro e a da água perto de 10 micrômetros." aria-describedby="saResumo"></canvas>
+                        </div>
+                        <p id="saResumo" class="sim__resumo" aria-live="polite">O pico da água fica em comprimento de onda 18,7 vezes maior que o do Sol.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="cotidiano" class="faixa campo-turquesa" aria-labelledby="cotidianoTitulo">
+            <div class="largura eixo">
+                <h2 id="cotidianoTitulo">No dia a dia</h2>
+                <div class="eixo__nota">
+                    <p class="abertura">A lei de Wien cabe em uma conta rápida: divida 2.898 pela temperatura em kelvin e obtenha o pico em micrômetros.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <ul>
+                        <li><strong>Sua pele:</strong> a cerca de 33 °C, emite com pico perto de 9,5 µm. É o que câmeras térmicas e termômetros infravermelhos captam.</li>
+                        <li><strong>Lâmpada incandescente:</strong> um filamento a 2.800 K tem pico em 1,03 µm, e só cerca de 8% da emissão fica no visível. O resto sai principalmente como infravermelho, por isso ela esquenta tanto.</li>
+                        <li><strong>Brasa e metal aquecido:</strong> a 1.000 K, o pico ainda está em 2,9 µm. Vemos só a cauda da curva, daí o vermelho.</li>
+                        <li><strong>Estrelas:</strong> uma estrela a 3.000 K tem pico em 966 nm e parece avermelhada; uma a 10.000 K tem pico em 290 nm e parece azulada.</li>
+                    </ul>
+                    <p class="nota">Valores calculados pelas leis acima, tratando cada corpo como corpo negro.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pergunta-coletor" class="faixa campo-sol" aria-labelledby="perguntaColetor">
+            <div class="largura">
+                <h2 id="perguntaColetor" class="ficha__pergunta">O coletor solar absorve a radiação como um corpo negro e a converte em calor?</h2>
+                <div class="ficha">
+                    <div>
+                        <h3>Análise física</h3>
+                        <p>Para captar o Sol, o coletor precisa absorver bem entre cerca de 0,3 e 2,5 µm, onde chega quase toda a energia solar. Nessa faixa, ele deve mesmo se parecer com um corpo negro.</p>
+                        <p>Mas a placa aquecida também emite, e a 60 °C ou 90 °C essa emissão fica no infravermelho térmico, perto de 8 a 9 µm. Um corpo negro de verdade perderia muito calor ali. A solução é a <strong>superfície seletiva</strong>: alta absorção da luz solar e baixa emissão no infravermelho. Como as faixas são diferentes, isso não contraria a lei de Kirchhoff. Um cromo negro, por exemplo, chega a absorver cerca de 97% e emitir cerca de 9%.</p>
+                    </div>
+                    <div>
+                        <h3>Resposta</h3>
+                        <p class="ficha__resposta">Sim, como aproximação: ele absorve a luz solar quase como um corpo negro e a converte em calor. Porém, o melhor coletor não é simplesmente um corpo negro, porque não convém emitir como um.</p>
+                    </div>
+                    <div>
+                        <h3>Limites</h3>
+                        <p>A vantagem cresce com a temperatura da placa. Para aquecer piscina, com água pouco acima do ar, as perdas são menores e coletores simples sem vidro são comuns. Vento, vidro, vazão e custo também pesam e não foram avaliados para o CEP.</p>
+                    </div>
+                </div>
+                <p class="nota">Fontes: <a href="https://doi.org/10.2172/15000706">Kennedy, NREL, revisão de superfícies seletivas</a>; <a href="https://web.archive.org/web/20250102110618/https://www.energy.gov/energysaver/solar-swimming-pool-heaters">Departamento de Energia dos EUA, aquecedores solares de piscina</a>.</p>
+            </div>
+        </section>
+
+        <section class="faixa campo-noite" aria-labelledby="coletorTitulo">
+            <div class="largura">
+                <h2 id="coletorTitulo" class="simulador__titulo">Comparativo: coletor preto × seletivo</h2>
+                <p class="simulador__observe"><strong>O que observar:</strong> com a placa morna as duas se parecem mais. Conforme a placa esquenta, a perda por radiação da tinta preta dispara, e a seletiva continua entregando calor.</p>
+                <form id="simColetor" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do comparativo de coletores</legend>
+                        <div class="campo"><label for="coPlaca">Temperatura da placa</label><output id="coPlacaSaida" for="coPlaca" aria-live="off">60 °C</output><input id="coPlaca" type="range" min="25" max="120" step="1" value="60"></div>
+                        <div class="campo"><label for="coSol">Irradiância solar</label><output id="coSolSaida" for="coSol" aria-live="off">800 W/m²</output><input id="coSol" type="range" min="200" max="1000" step="50" value="800"></div>
+                        <div class="campo"><label for="coAr">Temperatura do ar</label><output id="coArSaida" for="coAr" aria-live="off">25 °C</output><input id="coAr" type="range" min="0" max="40" step="1" value="25"></div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                        <dl class="resultados">
+                            <div><dt>Temperatura máxima da tinta preta</dt><dd id="coEstagnacaoPreta">—</dd></div>
+                            <div><dt>Temperatura máxima da seletiva</dt><dd id="coEstagnacaoSeletiva">—</dd></div>
+                        </dl>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div id="coBarras" class="barras"></div>
+                        <p id="coResumo" class="sim__resumo" aria-live="polite"></p>
+                        <p class="nota">Modelo simplificado, sem vidro: troca com o ar de 10 W/(m²·K) e céu claro. A tinta preta é tratada como corpo cinza; os dados da superfície seletiva são do cromo negro em <a href="https://doi.org/10.2172/15000706">Kennedy (2002)</a>.</p>
+                    </div>
+                </form>
+                <nav class="percurso" aria-label="Percurso de leitura a partir de Corpo Negro">
+                    <a rel="prev" href="index.html#ondas"><span>Anterior</span>Ondas</a>
+                    <a rel="next" href="index.html#fotoeletrico"><span>Próximo</span>Fotoelétrico</a>
+                </nav>
+            </div>
+        </section>
+
+        <section id="referencias" class="faixa" aria-labelledby="referenciasTitulo">
+            <div class="largura eixo">
+                <h2 id="referenciasTitulo">Referências</h2>
+                <div class="eixo__nota"><p>Consultadas em novembro de 2026.</p></div>
+                <div class="eixo__corpo">
+                    <ol class="referencias">
+                        <li>OpenStax. <a href="https://openstax.org/books/university-physics-volume-3/pages/6-1-blackbody-radiation">University Physics, volume 3, seção 6.1: Blackbody Radiation</a>.</li>
+                        <li>Studart, N. <a href="https://arxiv.org/abs/physics/0106037">A invenção do conceito de quantum de energia segundo Planck</a>. Revista Brasileira de Ensino de Física, 22(4), 2000.</li>
+                        <li>NIST. <a href="https://physics.nist.gov/cuu/Constants/">Valores CODATA das constantes físicas</a>.</li>
+                        <li>Prša, A. et al. <a href="https://arxiv.org/abs/1510.07674">Nominal values for selected solar and planetary quantities: IAU 2015 Resolution B3</a> (temperatura do Sol).</li>
+                        <li>The Nobel Prize. <a href="https://www.nobelprize.org/prizes/physics/1918/planck/facts/">Max Planck, Prêmio Nobel de Física de 1918</a>.</li>
+                        <li>Engineering ToolBox. <a href="https://www.engineeringtoolbox.com/emissivity-coefficients-d_447.html">Emissivity coefficients of common materials</a>.</li>
+                        <li>Kennedy, C. E. <a href="https://doi.org/10.2172/15000706">Review of Mid- to High-Temperature Solar Selective Absorber Materials</a>. NREL, 2002.</li>
+                        <li>Swinbank, W. C. <a href="https://doi.org/10.1002/qj.49708938105">Long-wave radiation from clear skies</a>. Quarterly Journal of the Royal Meteorological Society, 1963.</li>
+                        <li>U.S. Department of Energy. <a href="https://web.archive.org/web/20250102110618/https://www.energy.gov/energysaver/solar-swimming-pool-heaters">Solar Swimming Pool Heaters</a> (cópia arquivada).</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <div class="rodape__conteudo">
+            <p class="rodape__nome">Sol, Água e Tecnologia</p>
+            <div class="rodape__colunas">
+                <nav aria-label="Rodapé">
+                    <ul>
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="index.html#ondas">Ondas</a></li>
+                        <li><a href="corpo-negro.html">Corpo Negro</a></li>
+                        <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                        <li><a href="index.html#robotica">Robótica</a></li>
+                        <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                        <li><a href="index.html#sobre">Sobre</a></li>
+                        <li><a href="piscina-cep.html">Piscina do CEP</a></li>
+                        <li><a href="index.html#mapa-do-site">Mapa do site</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    <p><strong>Projeto Integrador CEP</strong>, 3º trimestre</p>
+                    <p>Colégio Estadual do Paraná</p>
+                    <p>Grupo 2</p>
+                    <p>© 2026</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

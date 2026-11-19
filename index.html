@@ -2,454 +2,627 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Projeto Integrador CEP: Radiação do Corpo Negro, Efeito Fotoelétrico e Automação de Aquecimento de Piscinas.">
-    <title>Projeto Integrador CEP | Sol, Água e Tecnologia</title>
-    
-    <!-- Fontes: Space Grotesk, Inter e OpenDyslexic -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sol, Água e Tecnologia | Projeto Integrador CEP</title>
+    <meta name="description" content="Projeto Integrador do Colégio Estadual do Paraná: ondas eletromagnéticas, efeito fotoelétrico, sensores e automação para o aquecimento de piscinas.">
+    <meta name="theme-color" content="#050810">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='11' cy='11' r='8' fill='%23FF7626'/%3E%3Cpath d='M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z' fill='%2357C5B6'/%3E%3C/svg%3E">
+    <script>(function(){var d=document.documentElement;d.classList.add('js');try{var p=JSON.parse(localStorage.getItem('cep-preferencias')||'{}');for(var k in p){if(/^(tamanho|linhas|letras|contraste|dislexia|movimento)$/.test(k))d.setAttribute('data-'+k,p[k]);}}catch(e){}})();</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- VLibras -->
-    <div vw class="enabled">
-        <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper>
-            <div class="vw-plugin-top-wrapper"></div>
-        </div>
-    </div>
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>
-        new window.VLibras.Widget('https://vlibras.gov.br/app');
-    </script>
 </head>
-<body>
-
-    <!-- Link para pular navegação (Acessibilidade) -->
-    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
-
-    <!-- Painel de Acessibilidade -->
-    <aside class="a11y-panel" id="a11yPanel" aria-label="Painel de Acessibilidade">
-        <button class="a11y-toggle" id="a11yToggle" aria-expanded="false" aria-controls="a11yControls">♿ Acessibilidade</button>
-        <div class="a11y-controls" id="a11yControls" hidden>
-            <button type="button" data-a11y="contrast" aria-pressed="false">Alto Contraste</button>
-            <button type="button" data-a11y="fontSize" aria-pressed="false">Aumentar Fonte</button>
-            <button type="button" data-a11y="dyslexic" aria-pressed="false">Fonte OpenDyslexic</button>
-            <button type="button" data-a11y="motion" aria-pressed="false">Reduzir Movimento</button>
-            <button type="button" data-a11y-reset>Restaurar Padrão</button>
+<body data-pagina="inicio">
+    <header class="cabecalho" data-menu="fechado">
+        <a class="pular" href="#conteudo">Pular para o conteúdo principal</a>
+        <div class="barra-progresso" id="barraProgresso" aria-hidden="true"></div>
+        <div class="cabecalho__barra">
+            <a class="marca" href="index.html">
+                <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8" fill="#FF7626"/><path d="M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z" fill="#57C5B6"/></svg>
+                <span>CEP Integrador</span>
+            </a>
+            <button id="botaoMenu" class="botao-barra" type="button" aria-expanded="false" aria-controls="navPrincipal">Menu</button>
+            <nav id="navPrincipal" class="nav-principal" aria-label="Principal">
+                <ul class="menu">
+                    <li><a href="index.html" aria-current="page">Início</a></li>
+                    <li><a href="index.html#ondas">Ondas</a></li>
+                    <li><a href="corpo-negro.html">Corpo Negro</a></li>
+                    <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                    <li><a href="index.html#robotica">Robótica</a></li>
+                    <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a class="menu__destaque" href="piscina-cep.html">Piscina do CEP</a></li>
+                </ul>
+            </nav>
+            <div class="acessibilidade">
+                <button id="botaoAcessibilidade" class="botao-barra" type="button" aria-expanded="false" aria-controls="painelAcessibilidade">Acessibilidade</button>
+                <div id="painelAcessibilidade" class="painel" role="group" aria-labelledby="painelTitulo" hidden>
+                    <p id="painelTitulo" class="painel__titulo">Ajustes de leitura</p>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Tamanho da fonte</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-tamanho" value="100" checked>100%</label>
+                            <label><input type="radio" name="pref-tamanho" value="125">125%</label>
+                            <label><input type="radio" name="pref-tamanho" value="150">150%</label>
+                            <label><input type="radio" name="pref-tamanho" value="175">175%</label>
+                            <label><input type="radio" name="pref-tamanho" value="200">200%</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre linhas</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-linhas" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-linhas" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-linhas" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre letras</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-letras" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-letras" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-letras" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <div class="alternancias">
+                        <button class="alternancia" type="button" data-preferencia="contraste" data-valor="alto" data-nome="Alto contraste" aria-pressed="false">Alto contraste</button>
+                        <button class="alternancia" type="button" data-preferencia="dislexia" data-valor="ativo" data-nome="Fonte para dislexia" aria-pressed="false">Fonte para dislexia</button>
+                        <button class="alternancia" type="button" data-preferencia="movimento" data-valor="reduzido" data-nome="Reduzir movimento" aria-pressed="false">Reduzir movimento</button>
+                    </div>
+                    <p class="painel__acoes">
+                        <button id="abrirVlibras" class="botao botao--pequeno" type="button">Abrir VLibras</button>
+                        <button id="restaurarPreferencias" class="botao botao--secundario botao--pequeno" type="button">Restaurar padrão</button>
+                    </p>
+                    <p class="painel__aviso">Os ajustes ficam guardados neste navegador e valem nas três páginas.</p>
+                </div>
+            </div>
         </div>
-    </aside>
+        <p id="anuncioGlobal" class="so-leitor" role="status"></p>
+    </header>
 
-    <!-- Barra de Progresso -->
-    <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
-
-    <!-- Navegação Principal -->
-    <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
-        <div class="nav-brand">
-            <span class="brand-icon">☀💧</span>
-            <span class="brand-text">CEP INTEGRADOR</span>
-        </div>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menu" aria-expanded="false">☰</button>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#inicio" class="nav-link active">01. Início</a></li>
-            <li><a href="#fundamentos" class="nav-link">02. Fundamentos</a></li>
-            <li><a href="#radiacao" class="nav-link">03. Corpo Negro</a></li>
-            <li><a href="#fotoeletrico" class="nav-link">04. Fotoelétrico</a></li>
-            <li><a href="#piscina" class="nav-link">05. Projeto Piscina</a></li>
-            <li><a href="#robotica" class="nav-link">06. Robótica</a></li>
-            <li><a href="#simuladores" class="nav-link">07. Simuladores</a></li>
-            <li><a href="#sustentabilidade" class="nav-link">08. Sustentabilidade</a></li>
-            <li><a href="#sobre" class="nav-link">09. Sobre</a></li>
-        </ul>
-    </nav>
-
-    <main id="main-content">
-
-        <!-- SEÇÃO 1: INÍCIO -->
-        <section id="inicio" class="section hero-section" data-index="0">
-            <div class="hero-bg">
-                <canvas id="heroCanvas"></canvas>
+    <main id="conteudo" tabindex="-1">
+        <noscript><p class="aviso">Os simuladores e os ajustes de leitura precisam de JavaScript. Todo o texto continua disponível.</p></noscript>
+        <section id="inicio" aria-labelledby="inicioTitulo">
+            <div class="capa__cena">
+                <canvas id="cenaCapa" data-cena="inicio" role="img" aria-label="Cena animada: o Sol envia ondas curtas até a água, e a água devolve ondas infravermelhas cerca de 19 vezes mais longas."></canvas>
+                <button id="pausarCena" class="botao botao--pequeno botao--sobre-cena capa__pausa so-js" type="button">Pausar animação</button>
             </div>
-            <div class="hero-content">
-                <span class="section-tag">Projeto Integrador CEP · 3º Trimestre</span>
-                <h1 class="hero-title">
-                    ENERGIA SOLAR,<br>
-                    <span class="highlight-water">ÁGUA</span> E <span class="highlight-sun">TECNOLOGIA</span>
-                </h1>
-                <p class="hero-subtitle">Da Física Moderna à Automação: compreendendo e otimizando o aquecimento de piscinas através da ciência.</p>
-                <div class="hero-actions">
-                    <a href="#fundamentos" class="btn-primary">Iniciar Jornada Científica</a>
-                    <a href="#simuladores" class="btn-secondary">Ir para Simuladores</a>
+            <div class="capa__texto">
+                <h1 id="inicioTitulo">Energia solar, <span class="agua">água</span> e <span class="sol">tecnologia</span></h1>
+                <div class="capa__apoio">
+                    <p>Da Física Moderna à automação: compreendendo e otimizando o aquecimento de piscinas através da ciência.</p>
+                    <p class="nota">Projeto Integrador CEP, 3º trimestre. Grupo 2, Colégio Estadual do Paraná.</p>
+                    <div class="acoes">
+                        <a class="botao" href="#ondas">Iniciar jornada científica</a>
+                        <a class="botao botao--secundario" href="piscina-cep.html">Ir para a Piscina do CEP</a>
+                    </div>
+                    <nav class="percurso percurso--capa" aria-label="Percurso de leitura a partir do Início">
+                        <a rel="next" href="#ondas"><span>Próximo</span>Ondas</a>
+                    </nav>
+                </div>
+            </div>
+            <h2 class="so-leitor">Páginas principais do projeto</h2>
+            <div class="chamadas">
+                <a class="chamada campo-sol" href="corpo-negro.html">
+                    <span id="radiacao" class="ancora-antiga"></span>
+                    <h3>Radiação do corpo negro</h3>
+                    <p>Por que tudo que tem temperatura emite luz, visível ou não, e como isso explica o Sol, a água e o coletor solar.</p>
+                </a>
+                <a class="chamada campo-turquesa" href="piscina-cep.html">
+                    <span id="piscina" class="ancora-antiga"></span>
+                    <span id="simuladores" class="ancora-antiga"></span>
+                    <h3>A piscina do CEP</h3>
+                    <p>As medidas reais do projeto, a energia necessária, as perdas de calor, a calculadora e o simulador térmico.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="ondas" class="faixa" aria-labelledby="ondasTitulo">
+            <span id="fundamentos" class="ancora-antiga"></span>
+            <div class="largura eixo">
+                <h2 id="ondasTitulo">Fundamentos das ondas eletromagnéticas</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">c = λ · f</span><span class="formula__texto">c é a velocidade da luz, λ (lambda) é o comprimento de onda e f é a frequência.</span></p>
+                    <p class="formula"><span class="formula__conta">E = h · f</span><span class="formula__texto">E é a energia de um fóton e h é a constante de Planck, 6,626 × 10⁻³⁴ J·s.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">A luz do Sol e o calor que a piscina irradia são o mesmo tipo de fenômeno. Só muda o tamanho da onda.</p>
+                    <p>As ondas eletromagnéticas são perturbações dos campos elétrico e magnético que se propagam no vácuo à velocidade da luz (<strong>c ≈ 3 × 10⁸ m/s</strong>). Elas não necessitam de um meio material para se propagar.</p>
+                    <p>Quando uma carga elétrica oscila, ela cria um campo elétrico que muda com o tempo. Esse campo variável gera um campo magnético, que também varia e gera de novo um campo elétrico. Um sustenta o outro, e os dois avançam juntos, perpendiculares entre si e à direção em que a onda viaja.</p>
+                    <p>Como a velocidade no vácuo é fixa, comprimento de onda e frequência andam em sentidos opostos: onda mais curta significa frequência maior. A energia, porém, chega em pacotes, os <strong>fótons</strong>, e cada fóton carrega mais energia quanto maior a frequência.</p>
+                    <p>No contexto da piscina, a radiação <strong>visível</strong> e o <strong>infravermelho</strong> são as faixas mais relevantes: juntas, carregam a maior parte da energia do Sol até os coletores e a água, e o infravermelho é também a faixa em que a própria água emite.</p>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO 2: FUNDAMENTOS (Ondas Eletromagnéticas) -->
-        <section id="fundamentos" class="section" data-index="1">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">02</span>
-                    <h2>Fundamentos das <span class="highlight-sun">Ondas Eletromagnéticas</span></h2>
+        <section class="faixa campo-noite" aria-labelledby="espectroTitulo">
+            <div class="largura">
+                <h3 id="espectroTitulo" class="simulador__titulo">Espectro eletromagnético interativo</h3>
+                <p class="simulador__observe"><strong>O que observar:</strong> ao encurtar a onda, a frequência e a energia do fóton crescem na mesma proporção, enquanto a velocidade da luz continua igual.</p>
+                <form id="simEspectro" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do espectro</legend>
+                        <div class="campo">
+                            <label for="espectroComprimento">Comprimento de onda</label>
+                            <output id="espectroComprimentoSaida" for="espectroComprimento" aria-live="off">10,0 µm</output>
+                            <input id="espectroComprimento" type="range" min="-12" max="3" step="0.05" value="-5">
+                        </div>
+                        <div class="grupo-botoes" role="group" aria-label="Ir para uma faixa do espectro">
+                            <button class="botao-opcao" type="button" data-regiao="radio" aria-pressed="false">Rádio</button>
+                            <button class="botao-opcao" type="button" data-regiao="micro" aria-pressed="false">Micro-ondas</button>
+                            <button class="botao-opcao" type="button" data-regiao="ir" aria-pressed="true">Infravermelho</button>
+                            <button class="botao-opcao" type="button" data-regiao="vis" aria-pressed="false">Visível</button>
+                            <button class="botao-opcao" type="button" data-regiao="uv" aria-pressed="false">Ultravioleta</button>
+                            <button class="botao-opcao" type="button" data-regiao="raio-x" aria-pressed="false">Raios X</button>
+                            <button class="botao-opcao" type="button" data-regiao="gama" aria-pressed="false">Gama</button>
+                        </div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="tela">
+                            <canvas id="graficoOnda" role="img" aria-label="Faixa do espectro com a posição escolhida e uma onda animada com os campos elétrico e magnético." aria-describedby="espectroResumo"></canvas>
+                            <button id="pausarOnda" class="botao botao--pequeno botao--sobre-cena tela__pausa so-js" type="button">Pausar animação</button>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Faixa</dt><dd id="espectroRegiao">Infravermelho</dd></div>
+                            <div><dt>Frequência</dt><dd id="espectroFrequencia">3,00 × 10¹³ Hz</dd></div>
+                            <div><dt>Energia do fóton</dt><dd id="espectroEnergia">1,24 × 10⁻¹ eV</dd></div>
+                        </dl>
+                        <p class="sim__resumo"><strong id="espectroInfoTitulo">Infravermelho: </strong><span id="espectroInfoTexto">de 700 nm a 1 mm. Parte da energia solar chega nesta faixa, e é nela que corpos à temperatura ambiente mais emitem. É por ela que a piscina perde calor por radiação.</span></p>
+                        <p id="espectroResumo" class="so-leitor" aria-live="polite"></p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="faixa" aria-labelledby="interacaoTitulo">
+            <div class="largura eixo">
+                <h3 id="interacaoTitulo" class="eixo__titulo">Como cada faixa encontra a água e as superfícies</h3>
+                <div class="eixo__nota">
+                    <p>A mesma piscina é quase transparente para uma faixa e opaca para outra. É por isso que o Sol aquece a água em profundidade, enquanto a emissão térmica sai só da pele da superfície.</p>
                 </div>
-                <div class="content-grid">
-                    <div class="text-block">
-                        <p>As ondas eletromagnéticas são perturbações dos campos elétrico e magnético que se propagam no vácuo à velocidade da luz (<strong>c ≈ 3 × 10⁸ m/s</strong>). Elas não necessitam de um meio material para se propagar.</p>
-                        <div class="formula-box">
-                            <span class="formula">c = λ · f</span>
-                            <p class="formula-desc">Onde <strong>c</strong> é a velocidade da luz, <strong>λ</strong> (lambda) é o comprimento de onda e <strong>f</strong> é a frequência.</p>
-                        </div>
-                        <p>No contexto da piscina, a radiação <strong>visível</strong> e o <strong>infravermelho</strong> são as faixas mais relevantes, pois são as que carregam a energia térmica do Sol até os coletores.</p>
+                <div class="eixo__corpo">
+                    <div class="rolagem" tabindex="0" role="region" aria-label="Tabela de interação das faixas com a água e com superfícies">
+                        <table>
+                            <thead><tr><th scope="col">Faixa</th><th scope="col">Na água</th><th scope="col">Em superfícies</th></tr></thead>
+                            <tbody>
+                                <tr><th scope="row">Ultravioleta</th><td>Atravessa parte da coluna de água e consome o cloro.</td><td>Degrada plásticos com o tempo. O vidro comum barra parte dela.</td></tr>
+                                <tr><th scope="row">Visível</th><td>Penetra fundo. No mar, ainda há luz significativa perto de 200 m.</td><td>Superfícies escuras absorvem; claras e polidas refletem.</td></tr>
+                                <tr><th scope="row">Infravermelho próximo</th><td>É absorvido nos primeiros centímetros ou menos.</td><td>Coletores escuros também o aproveitam.</td></tr>
+                                <tr><th scope="row">Infravermelho térmico</th><td>É absorvido e emitido em uma camada muito fina, da ordem de 10 a 20 µm.</td><td>Quase todas as superfícies não metálicas emitem bem; metais polidos, pouco.</td></tr>
+                                <tr><th scope="row">Micro-ondas</th><td>Fazem as moléculas polares girarem e dissiparem energia.</td><td>Metais refletem. Não participam do balanço da piscina.</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="visual-block">
-                        <h3>Espectro Eletromagnético Interativo</h3>
-                        <div class="spectrum-interactive" role="group" aria-label="Espectro eletromagnético">
-                            <button class="spec-btn" data-region="radio" tabindex="0">Rádio</button>
-                            <button class="spec-btn" data-region="micro" tabindex="0">Micro-ondas</button>
-                            <button class="spec-btn" data-region="ir" tabindex="0" aria-pressed="true">Infravermelho</button>
-                            <button class="spec-btn" data-region="vis" tabindex="0">Visível</button>
-                            <button class="spec-btn" data-region="uv" tabindex="0">Ultravioleta</button>
-                            <button class="spec-btn" data-region="raio-x" tabindex="0">Raios-X</button>
-                            <button class="spec-btn" data-region="gama" tabindex="0">Gama</button>
-                        </div>
-                        <div class="spectrum-info" id="spectrumInfo" role="status">
-                            <strong>Infravermelho (IV):</strong> Comprimentos de onda entre 700 nm e 1 mm. É a principal forma de transferência de calor por radiação. Essencial para o aquecimento solar térmico.
-                        </div>
-                    </div>
+                    <p class="nota">Fontes: <a href="https://oceanservice.noaa.gov/facts/light_travel.html">NOAA, alcance da luz no oceano</a>; <a href="https://cersat.ifremer.fr/Thematics/Sea-Surface-Temperature/Defining-sea-surface-temperature">Ifremer, camada de pele da água</a>; <a href="https://science.nasa.gov/ems/">NASA, espectro eletromagnético</a>.</p>
+                    <nav class="percurso" aria-label="Percurso de leitura a partir de Ondas">
+                        <a rel="prev" href="#inicio"><span>Anterior</span>Início</a>
+                        <a rel="next" href="corpo-negro.html"><span>Próximo</span>Corpo Negro</a>
+                    </nav>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO 3: RADIAÇÃO DO CORPO NEGRO (Expandido) -->
-        <section id="radiacao" class="section" data-index="2">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">03</span>
-                    <h2>Radiação do <span class="highlight-sun">Corpo Negro</span></h2>
+        <section id="fotoeletrico" class="faixa campo-azul" aria-labelledby="fotoTitulo">
+            <div class="largura eixo">
+                <h2 id="fotoTitulo">O efeito fotoelétrico</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">K<sub>max</sub> = h · f − φ</span><span class="formula__texto">Energia cinética máxima do elétron: energia do fóton menos a função trabalho φ do metal.</span></p>
+                    <p class="formula"><span class="formula__conta">f<sub>c</sub> = φ / h</span><span class="formula__texto">Frequência de corte: abaixo dela nenhum elétron sai, por mais forte que seja a luz.</span></p>
                 </div>
-                <div class="content-grid">
-                    <div class="text-block">
-                        <p>Um corpo negro ideal absorve toda a radiação incidente. Na prática, a superfície absorvedora de um coletor solar busca se aproximar desse comportamento, embora sempre haja alguma reflexão.</p>
-                        <p><strong>Conexão com a Piscina:</strong> O Sol (T ≈ 5.780 K) emite pico no visível. A água da piscina (T ≈ 300 K), por ser muito mais fria, emite radiação quase exclusivamente no <strong>infravermelho longo</strong>, o que representa uma perda de calor para o ambiente, especialmente à noite.</p>
-                    </div>
-                    <div class="simulator-block">
-                        <h3>Simulador: Lei de Planck e Wien</h3>
-                        <div class="sim-controls-compact">
-                            <label for="bbTempSlider">Temperatura do Corpo (K): <span id="bbTempVal">5780</span> K</label>
-                            <input type="range" id="bbTempSlider" min="300" max="10000" value="5780" step="10">
-                        </div>
-                        <div class="canvas-container">
-                            <canvas id="planckCanvas" aria-label="Gráfico da Lei de Planck mostrando intensidade vs comprimento de onda"></canvas>
-                        </div>
-                        <div class="sim-results">
-                            <span>Pico (Wien): <strong id="wienResult">501</strong> nm</span>
-                            <span>Potência (Stefan-Boltzmann): <strong id="stefanResult">6.33 × 10⁷</strong> W/m²</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 4: EFEITO FOTOELÉTRICO -->
-        <section id="fotoeletrico" class="section" data-index="3">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">04</span>
-                    <h2>O <span class="highlight-water">Efeito Fotoelétrico</span></h2>
-                </div>
-                <div class="content-grid">
-                    <div class="text-block">
-                        <p>Albert Einstein explicou que a luz se comporta como partículas (fótons) com energia quantizada: <strong>E = h · f</strong>.</p>
-                        <p>Para arrancar um elétron de um metal, o fóton deve ter energia maior que a <strong>função trabalho (φ)</strong> do material. A energia cinética máxima do elétron ejetado é:</p>
-                        <div class="formula-box">
-                            <span class="formula">Kmax = h · f - φ</span>
-                        </div>
-                        <div class="callout warning">
-                            <strong>Atenção Científica:</strong> Painéis fotovoltaicos não funcionam por "ejeção de elétrons no vácuo" (efeito fotoelétrico externo). Eles usam o <strong>efeito fotovoltaico interno</strong> em semicondutores (como o silício), onde a luz cria pares elétron-lacuna que são separados por um campo elétrico interno, gerando corrente. A eletricidade gerada pode alimentar a bomba da piscina.
-                        </div>
-                    </div>
-                    <div class="simulator-block">
-                        <h3>Simulador do Efeito Fotoelétrico</h3>
-                        <div class="sim-controls-compact">
-                            <label>Frequência da Luz (×10¹⁴ Hz): <span id="peFreqVal">8.0</span></label>
-                            <input type="range" id="peFreqSlider" min="4" max="12" value="8" step="0.1">
-                            <label>Intensidade da Luz: <span id="peIntVal">50</span>%</label>
-                            <input type="range" id="peIntSlider" min="0" max="100" value="50" step="5">
-                            <label>Material (Função Trabalho φ):</label>
-                            <select id="peMaterial" class="a11y-select">
-                                <option value="2.3">Sódio (2.3 eV)</option>
-                                <option value="4.7" selected>Cobre (4.7 eV)</option>
-                                <option value="5.1">Ferro (5.1 eV)</option>
-                            </select>
-                        </div>
-                        <div class="canvas-container">
-                            <canvas id="peCanvas" aria-label="Simulação de fótons atingindo uma placa metálica e ejetando elétrons"></canvas>
-                        </div>
-                        <div class="sim-results" id="peResults">
-                            Status: <strong>Aguardando ajuste de frequência...</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 5: PROJETO DA PISCINA -->
-        <section id="piscina" class="section" data-index="4">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">05</span>
-                    <h2>A Física por Trás do <span class="highlight-water">Aquecimento da Piscina</span></h2>
-                </div>
-                
-                <!-- Diagrama Interativo da Piscina -->
-                <div class="pool-diagram-container">
-                    <h3>Esquema do Sistema de Aquecimento Solar</h3>
-                    <div class="pool-diagram" role="img" aria-label="Diagrama esquemático de uma piscina com coletor solar, bomba, sensores e capa térmica">
-                        <div class="pool-component" data-info="coletor" tabindex="0" role="button" aria-label="Coletor Solar Térmico">
-                            <div class="comp-icon">☀</div>
-                            <span>Coletor Solar</span>
-                        </div>
-                        <div class="pool-component" data-info="bomba" tabindex="0" role="button" aria-label="Bomba de Circulação">
-                            <div class="comp-icon">⚙</div>
-                            <span>Bomba</span>
-                        </div>
-                        <div class="pool-component" data-info="sensores" tabindex="0" role="button" aria-label="Sensores de Temperatura e Fluxo">
-                            <div class="comp-icon">📡</div>
-                            <span>Sensores</span>
-                        </div>
-                        <div class="pool-component" data-info="piscina" tabindex="0" role="button" aria-label="Piscina e Perdas Térmicas">
-                            <div class="comp-icon">💧</div>
-                            <span>Piscina</span>
-                        </div>
-                        <div class="pool-component" data-info="capa" tabindex="0" role="button" aria-label="Capa Térmica">
-                            <div class="comp-icon">🛡</div>
-                            <span>Capa Térmica</span>
-                        </div>
-                    </div>
-                    <div class="component-info-box" id="componentInfo" role="status">
-                        Clique em um componente acima para ver sua função e o princípio físico envolvido.
-                    </div>
-                </div>
-
-                <div class="content-grid" style="margin-top: 40px;">
-                    <div class="text-block">
-                        <h3>Perdas Térmicas e a Capa</h3>
-                        <p>A piscina perde calor principalmente por <strong>evaporação</strong> (responsável por até 70% das perdas), seguida por convecção, radiação infravermelha e condução.</p>
-                        <p>A <strong>capa térmica</strong> não "aquece" a água. Ela atua como um isolante físico que:</p>
-                        <ul class="feature-list">
-                            <li>Reduz drasticamente a evaporação.</li>
-                            <li>Diminui a convecção com o ar frio.</li>
-                            <li>Reduz a perda de calor por radiação noturna.</li>
-                        </ul>
-                    </div>
-                    <div class="comparison-card">
-                        <h4>Comparativo: Com vs. Sem Capa</h4>
-                        <div class="comp-row">
-                            <div class="comp-col no-cover">
-                                <span class="comp-status">Sem Capa</span>
-                                <div class="comp-visual">
-                                    <div class="water-surface">
-                                        <div class="vapor">♨</div><div class="vapor">♨</div><div class="vapor">♨</div>
-                                    </div>
-                                </div>
-                                <p>Alta evaporação<br>Resfriamento rápido à noite</p>
-                            </div>
-                            <div class="comp-col with-cover">
-                                <span class="comp-status">Com Capa</span>
-                                <div class="comp-visual">
-                                    <div class="cover-surface"></div>
-                                </div>
-                                <p>Evaporação mínima<br>Conservação eficiente do calor</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 6: ROBÓTICA E SENSORES -->
-        <section id="robotica" class="section" data-index="5">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">06</span>
-                    <h2>Inteligência e <span class="highlight-water">Automação</span></h2>
-                </div>
-                <div class="content-grid">
-                    <div class="text-block">
-                        <h3>Sensores do Sistema</h3>
-                        <ul class="sensor-list">
-                            <li><strong>🌡 Sensor de Temperatura (DS18B20):</strong> Mede T da piscina e do coletor.</li>
-                            <li><strong>☀ Sensor de Irradiância:</strong> Mede a potência da luz solar (W/m²), não apenas "claro/escuro".</li>
-                            <li><strong>🌊 Sensor de Fluxo:</strong> Garante que a água está circulando antes de aquecer, protegendo o sistema.</li>
-                            <li><strong>📏 Sensor de Nível:</strong> Evita que a bomba funcione a seco (cavitação).</li>
-                        </ul>
-                        <p>Um microcontrolador (ex: ESP32) processa esses dados e aplica uma <strong>lógica de histerese</strong>: a bomba só liga se <code>T_coletor > T_piscina + 5°C</code> e houver fluxo e irradiância adequados.</p>
-                    </div>
-                    <div class="simulator-block">
-                        <h3>Simulador de Painel de Automação</h3>
-                        <div class="dashboard">
-                            <div class="dash-gauge">
-                                <span class="dash-label">T. Piscina</span>
-                                <input type="range" id="dashTPool" min="20" max="35" value="26" step="0.5">
-                                <span class="dash-val" id="valTPool">26.0 °C</span>
-                            </div>
-                            <div class="dash-gauge">
-                                <span class="dash-label">T. Coletor</span>
-                                <input type="range" id="dashTCol" min="20" max="60" value="35" step="0.5">
-                                <span class="dash-val" id="valTCol">35.0 °C</span>
-                            </div>
-                            <div class="dash-gauge">
-                                <span class="dash-label">Irradiância</span>
-                                <input type="range" id="dashIrr" min="0" max="1000" value="600" step="50">
-                                <span class="dash-val" id="valIrr">600 W/m²</span>
-                            </div>
-                            <div class="dash-toggle">
-                                <span class="dash-label">Sensor de Fluxo</span>
-                                <label class="switch">
-                                    <input type="checkbox" id="dashFlow" checked>
-                                    <span class="slider round"></span>
-                                </label>
-                                <span id="valFlow" class="status-on">Ativo</span>
-                            </div>
-                            
-                            <div class="dash-result" id="dashResult">
-                                <div class="pump-indicator" id="pumpIndicator">BOMBA: DESLIGADA</div>
-                                <p id="dashLogicText">Aguardando dados dos sensores...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 7: SIMULADORES E COMPARATIVOS -->
-        <section id="simuladores" class="section" data-index="6">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">07</span>
-                    <h2>Simulador de <span class="highlight-sun">Balanço Térmico</span></h2>
-                </div>
-                <div class="content-grid">
-                    <div class="simulator-block full-width">
-                        <h3>Evolução da Temperatura da Piscina (Q = m · c · ΔT)</h3>
-                        <p class="sim-disclaimer">*Modelo simplificado para fins educacionais. Hipóteses: volume constante, sem vento, eficiência do coletor fixa em 60%.</p>
-                        
-                        <div class="sim-controls-compact">
-                            <label>Volume da Piscina (L): <span id="simVolVal">20000</span></label>
-                            <input type="range" id="simVol" min="10000" max="50000" value="20000" step="1000">
-                            
-                            <label>Temp. Inicial da Água (°C): <span id="simTInitVal">24</span></label>
-                            <input type="range" id="simTInit" min="15" max="30" value="24" step="1">
-                            
-                            <label>Potência Solar Média (W/m²): <span id="simPowVal">600</span></label>
-                            <input type="range" id="simPow" min="200" max="1000" value="600" step="50">
-                            
-                            <label>Área do Coletor (m²): <span id="simAreaVal">20</span></label>
-                            <input type="range" id="simArea" min="10" max="50" value="20" step="5">
-                            
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="simCover" checked>
-                                Utilizar Capa Térmica (Reduz perdas em 60%)
-                            </label>
-                        </div>
-                        
-                        <button class="btn-primary" id="runSimBtn" style="margin-top: 15px;">Simular 24 Horas</button>
-                        
-                        <div class="canvas-container" style="margin-top: 20px;">
-                            <canvas id="thermalSimCanvas" aria-label="Gráfico de linha mostrando a variação da temperatura da piscina ao longo de 24 horas"></canvas>
-                        </div>
-                        <div class="sim-results" id="thermalSimResults">
-                            Clique em "Simular 24 Horas" para ver o resultado.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 8: SUSTENTABILIDADE -->
-        <section id="sustentabilidade" class="section" data-index="7">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">08</span>
-                    <h2>Energia Inteligente e <span class="highlight-water">Sustentabilidade</span></h2>
-                </div>
-                <div class="content-grid">
-                    <div class="text-block">
-                        <p>A aplicação da Física e da Robótica no gerenciamento de piscinas vai além do conforto térmico. Trata-se de <strong>eficiência energética</strong>.</p>
-                        <p>Ao utilizar coletores solares (conversão direta de radiação em calor), painéis fotovoltaicos (para alimentar a bomba) e uma capa térmica (redução de perdas por evaporação), reduzimos drasticamente a dependência da rede elétrica e o consumo de água (reabastecimento devido à evaporação).</p>
-                        <p><strong>Inclusão Digital:</strong> Um projeto verdadeiramente sustentável também é acessível. Por isso, esta plataforma foi desenvolvida seguindo as diretrizes WCAG 2.2, garantindo que o conhecimento científico esteja disponível para pessoas com diferentes necessidades visuais, motoras ou cognitivas.</p>
-                    </div>
-                    <div class="tech-comparison">
-                        <h3>Tecnologias Complementares</h3>
-                        <div class="tech-cards">
-                            <div class="tech-card">
-                                <h4>☀ Coletor Térmico</h4>
-                                <p>Aquece a água diretamente pela radiação.</p>
-                            </div>
-                            <div class="tech-card">
-                                <h4>⚡ Painel Fotovoltaico</h4>
-                                <p>Gera eletricidade para a bomba e automação.</p>
-                            </div>
-                            <div class="tech-card">
-                                <h4>🛡 Capa Térmica</h4>
-                                <p>Conserva o calor, reduzindo a demanda de energia.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 9: SOBRE O PROJETO -->
-        <section id="sobre" class="section" data-index="8">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-number">09</span>
-                    <h2>Sobre o <span class="highlight-sun">Projeto</span></h2>
-                </div>
-                <div class="about-content">
-                    <p>Este site foi desenvolvido como Projeto Integrador do 3º Trimestre do Colégio Estadual do Paraná (CEP), integrando as disciplinas de Física, Programação, Robótica e Projetos de Vida.</p>
-                    
-                    <h3>Mapa do Site</h3>
-                    <ul class="sitemap">
-                        <li><a href="#inicio">01. Início</a></li>
-                        <li><a href="#fundamentos">02. Fundamentos das Ondas Eletromagnéticas</a></li>
-                        <li><a href="#radiacao">03. Radiação do Corpo Negro</a></li>
-                        <li><a href="#fotoeletrico">04. Efeito Fotoelétrico</a></li>
-                        <li><a href="#piscina">05. Projeto da Piscina (Física Térmica)</a></li>
-                        <li><a href="#robotica">06. Robótica e Sensores</a></li>
-                        <li><a href="#simuladores">07. Simuladores Interativos</a></li>
-                        <li><a href="#sustentabilidade">08. Sustentabilidade e Impacto Social</a></li>
-                        <li><a href="#sobre">09. Sobre e Créditos</a></li>
+                <div class="eixo__corpo">
+                    <p class="abertura">Uma luz fraca e azulada consegue arrancar elétrons de um metal que uma luz vermelha fortíssima não arranca.</p>
+                    <p><strong>O experimento.</strong> Dentro de um tubo de vácuo, a luz atinge uma placa metálica. Os elétrons que saem chegam a um coletor e formam uma corrente, medida por um amperímetro. Aplicando uma tensão contrária, é possível frear esses elétrons até a corrente parar. Essa tensão de freamento revela a energia cinética máxima deles.</p>
+                    <p><strong>O que se observa.</strong></p>
+                    <ul>
+                        <li>Abaixo de uma frequência de corte não há emissão, qualquer que seja a intensidade.</li>
+                        <li>Acima do corte, a energia cinética máxima cresce com a frequência.</li>
+                        <li>A intensidade muda a quantidade de elétrons, não a energia máxima de cada um.</li>
+                        <li>A emissão começa praticamente de imediato.</li>
                     </ul>
-
-                    <div class="libras-placeholder">
-                        <h3>📹 Vídeo Explicativo em Libras</h3>
-                        <div class="video-container">
-                            <div class="video-placeholder">
-                                <span>🎥</span>
-                                <p>Espaço reservado para o vídeo de apresentação do projeto em Libras.</p>
-                                <p class="transcript-link"><a href="#">Baixar transcrição textual do vídeo (PDF)</a></p>
-                            </div>
-                        </div>
+                    <p>Uma onda clássica deveria entregar energia aos poucos, de modo que luz forte bastaria. Albert Einstein explicou em 1905 que a luz se comporta como partículas (fótons) com energia quantizada: <strong>E = h · f</strong>. Cada elétron recebe a energia de um único fóton. Para arrancar um elétron de um metal, o fóton deve ter energia maior que a <strong>função trabalho (φ)</strong> do material, e o que sobra vira energia cinética. Essa explicação foi citada no <a href="https://www.nobelprize.org/prizes/physics/1921/einstein/facts/">Prêmio Nobel de Física de 1921</a>.</p>
+                    <div class="aviso">
+                        <p><strong>Atenção científica:</strong> painéis fotovoltaicos não funcionam por "ejeção de elétrons no vácuo", o efeito fotoelétrico externo. Eles usam o <strong>efeito fotovoltaico interno</strong> em semicondutores, como o silício, onde a luz cria pares elétron-lacuna que são separados por um campo elétrico interno, gerando corrente. A eletricidade gerada pode alimentar a bomba da piscina.</p>
                     </div>
+                    <details>
+                        <summary><span>Por que o gráfico de K<sub>max</sub> por frequência é uma reta</span></summary>
+                        <div class="details__corpo">
+                            <p>Em K<sub>max</sub> = h · f − φ, a variável é f. A equação tem a forma y = a · x + b: a inclinação é a constante de Planck h, igual para todos os metais, e o corte com o eixo horizontal é f<sub>c</sub> = φ / h, que muda de um metal para outro.</p>
+                            <p>Por isso as retas de metais diferentes são paralelas. Medir essa inclinação é uma forma experimental de obter h.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
 
-                    <div class="credits">
-                        <p><strong>Grupo 2 · Colégio Estadual do Paraná</strong></p>
-                        <p class="credits-sub">Desenvolvido com HTML5, CSS3 e JavaScript Vanilla. Sem frameworks externos, garantindo leveza e acessibilidade.</p>
+        <section class="faixa campo-noite" aria-labelledby="simFotoTitulo">
+            <div class="largura">
+                <h3 id="simFotoTitulo" class="simulador__titulo">Simulador do efeito fotoelétrico</h3>
+                <p class="simulador__observe"><strong>O que observar:</strong> mexa na intensidade e veja a quantidade de elétrons mudar enquanto K<sub>max</sub> continua igual. Depois mude a frequência ou o metal.</p>
+                <form id="simFotoeletrico" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do efeito fotoelétrico</legend>
+                        <div class="campo">
+                            <label for="feFrequencia">Frequência da luz</label>
+                            <output id="feFrequenciaSaida" for="feFrequencia" aria-live="off">8,0 × 10¹⁴ Hz</output>
+                            <input id="feFrequencia" type="range" min="3" max="16" step="0.1" value="8">
+                        </div>
+                        <div class="campo">
+                            <label for="feIntensidade">Intensidade da luz</label>
+                            <output id="feIntensidadeSaida" for="feIntensidade" aria-live="off">50%</output>
+                            <input id="feIntensidade" type="range" min="0" max="100" step="5" value="50">
+                        </div>
+                        <div class="campo">
+                            <label for="feMaterial">Metal e função trabalho</label>
+                            <select id="feMaterial">
+                                <option value="2.28" data-nome="Sódio" selected>Sódio (2,28 eV)</option>
+                                <option value="4.5" data-nome="Ferro">Ferro (4,5 eV)</option>
+                                <option value="4.7" data-nome="Cobre">Cobre (4,7 eV)</option>
+                                <option value="5.1" data-nome="Ouro">Ouro (5,1 eV)</option>
+                            </select>
+                            <p class="campo__ajuda">Valores da tabela <a href="https://hyperphysics.gsu.edu/hbase/Tables/photoelec.html">HyperPhysics</a>. Eles variam com o preparo da superfície.</p>
+                        </div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="tela">
+                            <canvas id="graficoFotoeletrico" role="img" aria-label="Animação: fótons atingem uma placa metálica e, se tiverem energia suficiente, elétrons saem em direção ao coletor." aria-describedby="feResumo"></canvas>
+                            <button id="pausarFotoeletrico" class="botao botao--pequeno botao--sobre-cena tela__pausa so-js" type="button">Pausar animação</button>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Energia do fóton</dt><dd id="feFoton">3,31 eV</dd></div>
+                            <div><dt>Frequência de corte</dt><dd id="feCorte">5,51 × 10¹⁴ Hz</dd></div>
+                            <div><dt>K<sub>max</sub></dt><dd id="feKmax">1,03 eV</dd></div>
+                            <div><dt>Elétrons emitidos</dt><dd id="feEletrons">50% do máximo</dd></div>
+                        </dl>
+                        <div class="tela tela--baixa">
+                            <canvas id="graficoKmax" role="img" aria-label="Gráfico de energia cinética máxima em função da frequência: uma reta que começa na frequência de corte." aria-describedby="feResumo"></canvas>
+                        </div>
+                        <p id="feResumo" class="sim__resumo" aria-live="polite">Sódio: há emissão. Cada fóton traz 3,31 eV, gasta 2,28 eV para soltar o elétron e sobram até 1,03 eV de energia cinética.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="pergunta-fotovoltaico" class="faixa campo-sol" aria-labelledby="perguntaFv">
+            <div class="largura">
+                <h3 id="perguntaFv" class="ficha__pergunta">O efeito fotoelétrico explica os painéis fotovoltaicos?</h3>
+                <div class="ficha">
+                    <div>
+                        <h4>Análise física</h4>
+                        <p>Os dois fenômenos dependem da mesma ideia: a luz entrega energia em fótons, e só fótons com energia suficiente produzem efeito. A diferença está no destino do elétron.</p>
+                        <p>No <strong>efeito fotoelétrico externo</strong>, o elétron escapa do metal para o vácuo. Em um painel, ocorre o <strong>efeito fotovoltaico</strong>: em um semicondutor como o silício, cuja banda proibida é de cerca de 1,12 eV, o fóton cria um par elétron-lacuna. Uma junção p-n separa as cargas com seu campo elétrico interno, e surge uma corrente sem que o elétron saia do material.</p>
+                        <p>A energia do fóton acima da banda proibida vira calor. Essa é uma das razões para o painel não converter toda a luz em eletricidade.</p>
+                    </div>
+                    <div>
+                        <h4>Resposta</h4>
+                        <p class="ficha__resposta">Só em parte. A ideia de fóton ajuda a entender o painel, mas ele funciona pelo efeito fotovoltaico, não por ejeção de elétrons no vácuo. A eletricidade gerada pode alimentar a bomba da piscina ou uma bomba de calor.</p>
+                    </div>
+                    <div>
+                        <h4>Limites</h4>
+                        <p>O resultado real depende de orientação, sombra, temperatura do painel, inversor e horário: à noite não há geração. O rendimento da bomba de calor cai conforme o clima. Custos e instalação no CEP não foram avaliados.</p>
+                    </div>
+                </div>
+                <p class="nota">Fontes: <a href="https://www.pveducation.org/pvcdrom/solar-cell-operation/light-generated-current">PVEducation, corrente gerada pela luz</a>; <a href="https://www.pveducation.org/pvcdrom/materials/general-properties-of-silicon">PVEducation, propriedades do silício</a>.</p>
+            </div>
+        </section>
+
+        <section class="faixa campo-noite" aria-labelledby="energiaTitulo">
+            <div class="largura">
+                <h3 id="energiaTitulo" class="simulador__titulo">Comparativo: coletor térmico × painel fotovoltaico</h3>
+                <p class="simulador__observe"><strong>O que observar:</strong> na mesma área, o coletor entrega calor diretamente. O painel entrega eletricidade, e o quanto ela aquece depende de como é usada.</p>
+                <form id="simEnergia" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do comparativo</legend>
+                        <div class="campo"><label for="enSol">Irradiância solar</label><output id="enSolSaida" for="enSol" aria-live="off">600 W/m²</output><input id="enSol" type="range" min="100" max="1000" step="50" value="600"></div>
+                        <div class="campo"><label for="enArea">Área instalada</label><output id="enAreaSaida" for="enArea" aria-live="off">100 m²</output><input id="enArea" type="range" min="10" max="500" step="10" value="100"></div>
+                        <div class="campo"><label for="enColetor">Eficiência do coletor</label><output id="enColetorSaida" for="enColetor" aria-live="off">60%</output><input id="enColetor" type="range" min="20" max="80" step="5" value="60"></div>
+                        <div class="campo"><label for="enPainel">Eficiência do painel</label><output id="enPainelSaida" for="enPainel" aria-live="off">22%</output><input id="enPainel" type="range" min="10" max="30" step="1" value="22"></div>
+                        <div class="campo"><label for="enCop">COP da bomba de calor</label><output id="enCopSaida" for="enCop" aria-live="off">4,0</output><input id="enCop" type="range" min="2" max="7" step="0.5" value="4"></div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div id="enBarras" class="barras"></div>
+                        <p id="enResumo" class="sim__resumo" aria-live="polite"></p>
+                        <p class="nota">Cenário de exemplo. Módulos comerciais de silício passam de 22% de eficiência segundo o <a href="https://www.ise.fraunhofer.de/en/publications/studies/photovoltaics-report.html">Fraunhofer ISE</a>, e bombas de calor para piscina costumam ter COP de 3 a 7, segundo o <a href="https://web.archive.org/web/20250110215122/https://www.energy.gov/energysaver/heat-pump-swimming-pool-heaters">Departamento de Energia dos EUA</a>.</p>
+                    </div>
+                </form>
+                <nav class="percurso" aria-label="Percurso de leitura a partir de Fotoelétrico">
+                    <a rel="prev" href="corpo-negro.html"><span>Anterior</span>Corpo Negro</a>
+                    <a rel="next" href="#robotica"><span>Próximo</span>Robótica</a>
+                </nav>
+            </div>
+        </section>
+
+        <section id="robotica" class="faixa" aria-labelledby="roboticaTitulo">
+            <div class="largura eixo">
+                <h2 id="roboticaTitulo">Inteligência e automação</h2>
+                <div class="eixo__nota">
+                    <h3>O protótipo do grupo</h3>
+                    <ul>
+                        <li>Arduino ou microcontrolador</li>
+                        <li>Sensores de temperatura</li>
+                        <li>Motores ou bombas</li>
+                        <li>LEDs e protoboard</li>
+                        <li>Materiais recicláveis</li>
+                    </ul>
+                    <p class="nota">O coletor solar, o ESP32 e a capa térmica citados neste site são propostas do grupo. Não estão instalados no CEP.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">O sensor mede a água, o Arduino compara com o limite configurado e o sistema liga o aquecimento, desligando ao atingir a temperatura.</p>
+                    <p>Essa é a lógica do protótipo. A dificuldade relatada pelo grupo foi a <strong>grande margem de erro do sensor</strong>, tratada com testes repetidos para calibração. A partir dele, o grupo propõe um sistema maior, em que um microcontrolador, como o ESP32, reúne vários sensores e decide quando circular a água pelo coletor.</p>
+                    <h3>Sensores do sistema proposto</h3>
+                    <ul class="sensores">
+                        <li>
+                            <h4>Temperatura (DS18B20)</h4>
+                            <p><strong>Função e princípio:</strong> mede a água da piscina e o coletor. É um circuito integrado cuja resposta elétrica muda com a temperatura e que envia o valor em formato digital.</p>
+                            <p><strong>Faixa e erro:</strong> de −55 a +125 °C, com erro de ±0,5 °C entre −10 e +85 °C.</p>
+                            <p><strong>Calibração:</strong> comparar com um termômetro de referência em duas temperaturas.</p>
+                        </li>
+                        <li>
+                            <h4>Irradiância</h4>
+                            <p><strong>Função e princípio:</strong> mede a potência da luz solar em W/m², não apenas claro ou escuro. Na termopilha, uma superfície preta aquece e gera tensão; na célula de silício, a luz gera corrente.</p>
+                            <p><strong>Faixa e erro:</strong> o silício cobre de 0,4 a 1,1 µm, com erro típico abaixo de ±3%, podendo chegar a ±10%.</p>
+                            <p><strong>Calibração:</strong> comparar com um piranômetro de referência sob céu claro.</p>
+                        </li>
+                        <li>
+                            <h4>Fluxo</h4>
+                            <p><strong>Função e princípio:</strong> confirma que a água está circulando, protegendo o sistema. A água gira um rotor com ímã, e um sensor de efeito Hall conta os pulsos.</p>
+                            <p><strong>Faixa e erro:</strong> no modelo YF-S201, de 1 a 30 L/min, 450 pulsos por litro e ±10%. Serve ao protótipo, não à vazão de uma piscina grande.</p>
+                            <p><strong>Calibração:</strong> medir o tempo para encher um volume conhecido.</p>
+                        </li>
+                        <li>
+                            <h4>Nível</h4>
+                            <p><strong>Função e princípio:</strong> evita que a bomba funcione a seco. Em uma boia, o empuxo da água move um contato elétrico.</p>
+                            <p><strong>Faixa e erro:</strong> indica apenas se a água está acima ou abaixo de um ponto.</p>
+                            <p><strong>Calibração:</strong> conferir o ponto de acionamento com uma régua.</p>
+                        </li>
+                    </ul>
+                    <p class="nota">Fontes: <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf">folha de dados do DS18B20</a>; <a href="https://www.campbellsci.com/blog/pyranometers-need-to-know">Campbell Scientific, piranômetros</a>; <a href="https://components101.com/sensors/yf-s201-water-flow-measurement-sensor">especificações do YF-S201</a>.</p>
+                    <h3>Calibrar é corrigir dois erros diferentes</h3>
+                    <p>O <strong>erro sistemático</strong> empurra todas as leituras para o mesmo lado. O <strong>erro aleatório</strong> faz as leituras oscilarem. Repetir medidas e tirar a média reduz o segundo: com 16 leituras, a oscilação da média cai para cerca de um quarto. Mas a média não remove o primeiro. Para isso, compara-se o sensor com uma referência.</p>
+                    <p class="formula"><span class="formula__conta">T<sub>corrigida</sub> = a · T<sub>lida</sub> + b</span><span class="formula__texto">Com duas referências, a = (R₂ − R₁) / (L₂ − L₁) e b = R₁ − a · L₁, em que R é o valor de referência e L é a leitura do sensor.</span></p>
+                    <details>
+                        <summary>Exemplo numérico de calibração</summary>
+                        <div class="details__corpo">
+                            <p>Números hipotéticos, não são medidas do grupo. O sensor marca 1,2 °C em gelo fundente (referência 0 °C) e 41,0 °C em água conferida a 40,0 °C.</p>
+                            <p>a = (40,0 − 0) / (41,0 − 1,2) ≈ 1,005 e b = 0 − 1,005 · 1,2 ≈ −1,21. Uma leitura de 30,0 °C vira 1,005 · 30,0 − 1,21 ≈ 28,9 °C.</p>
+                        </div>
+                    </details>
+                    <h3>Por que usar histerese</h3>
+                    <p>Com um limite único, uma leitura oscilando perto dele faria a bomba ligar e desligar sem parar. A <strong>histerese</strong> usa dois limites: a bomba liga quando o coletor está 8 °C acima da piscina e só desliga quando a diferença cai para 3 °C. Entre os dois valores, ela mantém o estado anterior.</p>
+                    <p>Há outro cuidado: o fluxo só aparece depois que a bomba liga. Por isso a proposta dá uma <strong>janela de partida</strong> de 20 segundos para o fluxo surgir. Se ele não surgir, a bomba é desligada e o sistema avisa.</p>
+                    <details>
+                        <summary>Ver a lógica em código para Arduino</summary>
+                        <div class="details__corpo">
+<pre tabindex="0" role="region" aria-label="Exemplo de código com histerese"><code>// Exemplo didático da proposta
+const float LIGA = 8.0, DESLIGA = 3.0;
+bool bomba = false;
+
+void atualizarBomba(float tColetor, float tPiscina) {
+  float delta = tColetor - tPiscina;
+  if (!bomba &amp;&amp; delta &gt;= LIGA) bomba = true;
+  if (bomba &amp;&amp; delta &lt;= DESLIGA) bomba = false;
+  digitalWrite(PINO_BOMBA, bomba ? HIGH : LOW);
+}</code></pre>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section class="faixa campo-noite" aria-labelledby="automacaoTitulo">
+            <div class="largura">
+                <h3 id="automacaoTitulo" class="simulador__titulo">Simulador de painel de automação</h3>
+                <p class="simulador__observe"><strong>O que observar:</strong> suba a temperatura do coletor até a bomba ligar. Depois desça devagar: ela só desliga no limite inferior. Desmarque "Bomba gera fluxo" para ver a proteção agir.</p>
+                <form id="simAutomacao" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Sensores simulados</legend>
+                        <div class="campo"><label for="auPiscina">Temperatura da piscina</label><output id="auPiscinaSaida" for="auPiscina" aria-live="off">24,0 °C</output><input id="auPiscina" type="range" min="15" max="36" step="0.5" value="24"></div>
+                        <div class="campo"><label for="auColetor">Temperatura do coletor</label><output id="auColetorSaida" for="auColetor" aria-live="off">28,0 °C</output><input id="auColetor" type="range" min="15" max="60" step="0.5" value="28"></div>
+                        <div class="campo"><label for="auSol">Irradiância</label><output id="auSolSaida" for="auSol" aria-live="off">600 W/m²</output><input id="auSol" type="range" min="0" max="1000" step="50" value="600"></div>
+                        <div class="campo">
+                            <label for="auMeta">Meta da água (cenário)</label>
+                            <select id="auMeta"><option value="28" selected>28 °C</option><option value="35">35 °C, cenário do grupo</option></select>
+                        </div>
+                        <label class="verificacao"><input id="auNivel" type="checkbox" checked>Nível de água adequado</label>
+                        <label class="verificacao"><input id="auBomba" type="checkbox" checked>Bomba gera fluxo</label>
+                        <label class="verificacao"><input id="auCapa" type="checkbox">Capa sobre a piscina</label>
+                        <p class="sim__acoes">
+                            <button id="auAvancar" class="botao botao--secundario botao--pequeno" type="button">Avançar 5 s</button>
+                            <button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button>
+                        </p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <p id="auEstado" class="estado" data-estado="desligada">Bomba desligada</p>
+                        <p id="auMotivo">Aguardando as condições de partida.</p>
+                        <p><button id="auRearmar" class="botao botao--pequeno" type="button" hidden>Rearmar alarme</button></p>
+                        <div class="tela tela--baixa">
+                            <canvas id="graficoAutomacao" role="img" aria-label="Histórico da diferença de temperatura entre coletor e piscina, com os limites de ligar e desligar." aria-describedby="auMotivo"></canvas>
+                            <button id="pausarAutomacao" class="botao botao--pequeno botao--sobre-cena tela__pausa so-js" type="button">Pausar animação</button>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Diferença coletor − piscina</dt><dd id="auDelta">4,0 °C</dd></div>
+                            <div><dt>Sensor de fluxo</dt><dd id="auFluxo">sem fluxo</dd></div>
+                        </dl>
+                        <p id="auLembrete" class="sim__resumo">Sem lembrete no momento.</p>
+                        <h4 class="titulo-registro">Registro de decisões</h4>
+                        <ol id="auRegistro" class="registro" tabindex="0" aria-label="Registro de decisões da automação"></ol>
+                        <p id="auAnuncio" class="so-leitor" aria-live="polite"></p>
+                    </div>
+                </form>
+                <nav class="percurso" aria-label="Percurso de leitura a partir de Robótica">
+                    <a rel="prev" href="#fotoeletrico"><span>Anterior</span>Fotoelétrico</a>
+                    <a rel="next" href="#sustentabilidade"><span>Próximo</span>Sustentabilidade</a>
+                </nav>
+            </div>
+        </section>
+
+        <section id="sustentabilidade" class="faixa" aria-labelledby="sustTitulo">
+            <div class="largura eixo">
+                <h2 id="sustTitulo">Energia inteligente e sustentabilidade</h2>
+                <div class="eixo__nota">
+                    <h3>Tecnologias complementares</h3>
+                    <p><strong>Coletor térmico:</strong> aquece a água diretamente pela radiação.</p>
+                    <p><strong>Painel fotovoltaico:</strong> gera eletricidade para a bomba e a automação.</p>
+                    <p><strong>Capa térmica:</strong> conserva o calor, reduzindo a demanda de energia.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">A aplicação da Física e da Robótica no gerenciamento de piscinas vai além do conforto térmico. Trata-se de eficiência energética.</p>
+                    <p>Ao utilizar coletores solares (conversão direta de radiação em calor), painéis fotovoltaicos (para alimentar a bomba) e uma capa térmica (redução de perdas por evaporação), a proposta do grupo busca reduzir a dependência da rede elétrica e o consumo de água usado para repor o que evapora.</p>
+                    <h3>Estimativas, com as contas à vista</h3>
+                    <div class="rolagem" tabindex="0" role="region" aria-label="Tabela de estimativas de sustentabilidade">
+                        <table>
+                            <caption>Piscina do projeto, partindo de 20 °C</caption>
+                            <thead><tr><th scope="col">Grandeza</th><th scope="col" class="numero">Meta 28 °C</th><th scope="col" class="numero">Meta 35 °C</th></tr></thead>
+                            <tbody>
+                                <tr><th scope="row">Energia para aquecer a água</th><td class="numero">39.820,5 kWh</td><td class="numero">74.663,5 kWh</td></tr>
+                                <tr><th scope="row">CO₂ se vier da rede, com resistência elétrica</th><td class="numero">1.533 kg</td><td class="numero">2.875 kg</td></tr>
+                                <tr><th scope="row">CO₂ com bomba de calor de COP 4</th><td class="numero">383 kg</td><td class="numero">719 kg</td></tr>
+                                <tr><th scope="row">Evaporação diária sem capa, em um cenário</th><td class="numero">11,1 mil L</td><td class="numero">19,9 mil L</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="nota">O CO₂ usa o fator médio do Sistema Interligado Nacional em 2023, de 38,5 kg por MWh, publicado pelo <a href="https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/noticias/2024/02/fator-de-emissao-de-co2-na-geracao-de-energia-eletrica-no-brasil-em-2023-e-o-menor-em-12-anos">MCTI</a>; ele muda a cada ano. A evaporação considera água parada, ar a 20 °C, umidade de 60% e vento de 1 m/s. As contas cobrem só o primeiro aquecimento, sem as perdas durante o processo.</p>
+                    <p>O Departamento de Energia dos EUA aponta que cobrir uma piscina fora de uso pode economizar de 50% a 70% do custo de aquecimento e reduzir de 30% a 50% a água de reposição (<a href="https://web.archive.org/web/20250110214936/https://www.energy.gov/energysaver/swimming-pool-covers">fonte</a>). Esses valores vêm de outro contexto e não são uma previsão para o CEP.</p>
+                    <h3>Inclusão também é sustentabilidade</h3>
+                    <p>Um projeto verdadeiramente sustentável também é acessível. O tema do grupo une o aquecimento à acessibilidade: uma piscina que pode ser usada durante todo o ano letivo amplia o acesso à atividade física. O próprio site segue essa ideia, com ajustes de leitura, navegação por teclado e tradução para Libras pelo VLibras, para que o conhecimento científico chegue a pessoas com diferentes necessidades visuais, auditivas, motoras ou cognitivas. A <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm">Lei Brasileira de Inclusão</a> trata da acessibilidade em sites, e a <a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10436.htm">Lei nº 10.436</a> reconhece a Libras.</p>
+                    <nav class="percurso" aria-label="Percurso de leitura a partir de Sustentabilidade">
+                        <a rel="prev" href="#robotica"><span>Anterior</span>Robótica</a>
+                        <a rel="next" href="piscina-cep.html"><span>Próximo</span>Piscina do CEP</a>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="faixa campo-noite" aria-labelledby="sobreTitulo">
+            <div class="largura eixo">
+                <h2 id="sobreTitulo">Sobre o projeto</h2>
+                <div class="eixo__nota">
+                    <p><strong>Grupo 2, Colégio Estadual do Paraná</strong></p>
+                    <p class="nota">Desenvolvido com HTML, CSS e JavaScript puros, sem frameworks, em busca de leveza e acessibilidade.</p>
+                    <p class="nota">Ilustrações e gráficos feitos em código pelo próprio site. Fonte OpenDyslexic sob a licença SIL Open Font License, incluída na pasta <code>fonts</code>.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">Este site foi desenvolvido como Projeto Integrador do 3º trimestre do Colégio Estadual do Paraná, integrando Física, Programação, Robótica e Projetos de Vida.</p>
+                    <h3 id="acessibilidade">Acessibilidade: o que foi testado</h3>
+                    <p>O roteiro pede acessibilidade plena. Essa é a nossa meta, mas nenhum teste automático garante que ela foi alcançada. Em novembro de 2026, no Chrome 157, verificamos:</p>
+                    <ul>
+                        <li><strong>axe-core 4.14:</strong> nenhuma violação séria ou crítica nas três páginas, no modo padrão, em alto contraste, com fonte para dislexia, com leitura ampliada, com movimento reduzido e com todos os ajustes juntos.</li>
+                        <li><strong>Lighthouse 13.6:</strong> nota 100 em acessibilidade nas três páginas, em computador e celular.</li>
+                        <li><strong>Contraste medido em cada texto:</strong> o menor valor foi 6,06:1 no modo padrão e 15,97:1 em alto contraste.</li>
+                        <li><strong>Teclado:</strong> percurso completo com Tab, foco visível, link para pular ao conteúdo, menu e painel com Enter, Espaço e Esc.</li>
+                        <li><strong>Telas:</strong> larguras de 320, 390, 768 e 1366 px sem rolagem lateral, inclusive com texto a 200%.</li>
+                        <li><strong>VLibras:</strong> o botão aparece, recebe foco e abre o tradutor.</li>
+                    </ul>
+                    <p><strong>Ainda não foi testado:</strong> uso com leitores de tela e por pessoas com deficiência, navegadores como Firefox e Safari, celulares físicos e a qualidade da tradução automática em Libras. Se encontrar uma barreira, avise o Grupo 2.</p>
+                    <h3 id="libras">Vídeos em Libras</h3>
+                    <p>O VLibras traduz o texto da página em Libras por um avatar. Abra pelo botão no canto da tela ou no painel de Acessibilidade. Além dele, o site tem lugar reservado para vídeos gravados em Libras. Eles ainda não foram publicados; cada vídeo entrará aqui com legenda e transcrição.</p>
+                    <div class="libras-vaga" data-video="" data-legenda="" data-transcricao="">
+                        <h4>Apresentação do projeto</h4>
+                        <p data-libras-estado>Vídeo em preparação.</p>
+                    </div>
+                    <div class="libras-vaga" data-video="" data-legenda="" data-transcricao="">
+                        <h4>Radiação do corpo negro</h4>
+                        <p data-libras-estado>Vídeo em preparação.</p>
+                    </div>
+                    <div class="libras-vaga" data-video="" data-legenda="" data-transcricao="">
+                        <h4>A piscina do CEP</h4>
+                        <p data-libras-estado>Vídeo em preparação.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <section id="mapa-do-site" class="faixa" aria-labelledby="mapaTitulo">
+            <div class="largura">
+                <h2 id="mapaTitulo" class="titulo-secao">Mapa do site</h2>
+                <div class="colunas-mapa">
+                    <div>
+                        <h3><a href="index.html">Página inicial</a></h3>
+                        <ul>
+                            <li><a href="index.html#inicio">Início</a></li>
+                            <li><a href="index.html#ondas">Ondas eletromagnéticas</a></li>
+                            <li><a href="index.html#fotoeletrico">Efeito fotoelétrico</a></li>
+                            <li><a href="index.html#pergunta-fotovoltaico">Pergunta do fotovoltaico</a></li>
+                            <li><a href="index.html#robotica">Robótica e sensores</a></li>
+                            <li><a href="index.html#sustentabilidade">Sustentabilidade e impacto social</a></li>
+                            <li><a href="index.html#sobre">Sobre e créditos</a></li>
+                            <li><a href="index.html#acessibilidade">Acessibilidade: o que foi testado</a></li>
+                            <li><a href="index.html#libras">Vídeos em Libras</a></li>
+                            <li><a href="index.html#mapa-do-site">Mapa do site</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3><a href="corpo-negro.html">Radiação do corpo negro</a></h3>
+                        <ul>
+                            <li><a href="corpo-negro.html#intuicao">A ideia central</a></li>
+                            <li><a href="corpo-negro.html#cavidade">O que é um corpo negro</a></li>
+                            <li><a href="corpo-negro.html#kirchhoff">Absorção e emissão</a></li>
+                            <li><a href="corpo-negro.html#emissividade">Corpo cinza e emissividade</a></li>
+                            <li><a href="corpo-negro.html#catastrofe">Catástrofe do ultravioleta</a></li>
+                            <li><a href="corpo-negro.html#hipotese-planck">Hipótese de Planck</a></li>
+                            <li><a href="corpo-negro.html#leis">Leis de Planck, Wien e Stefan-Boltzmann</a></li>
+                            <li><a href="corpo-negro.html#simulador-planck">Simulador de Planck e Wien</a></li>
+                            <li><a href="corpo-negro.html#sol-agua">Sol × água</a></li>
+                            <li><a href="corpo-negro.html#cotidiano">Exemplos do cotidiano</a></li>
+                            <li><a href="corpo-negro.html#pergunta-coletor">Pergunta do coletor solar</a></li>
+                            <li><a href="corpo-negro.html#referencias">Referências</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3><a href="piscina-cep.html">A piscina do CEP</a></h3>
+                        <ul>
+                            <li><a href="piscina-cep.html#problema">O problema</a></li>
+                            <li><a href="piscina-cep.html#medidas">Medidas</a></li>
+                            <li><a href="piscina-cep.html#calculo">Volume e energia</a></li>
+                            <li><a href="piscina-cep.html#infravermelho">Por que a água emite no infravermelho</a></li>
+                            <li><a href="piscina-cep.html#emitida-liquida">Energia emitida e perda líquida</a></li>
+                            <li><a href="piscina-cep.html#sistema">Sistema proposto</a></li>
+                            <li><a href="piscina-cep.html#perdas">Perdas e capa térmica</a></li>
+                            <li><a href="piscina-cep.html#pergunta-capa">Pergunta da capa</a></li>
+                            <li><a href="piscina-cep.html#simulador-termico">Simulador térmico</a></li>
+                            <li><a href="piscina-cep.html#calculadora">Calculadora</a></li>
+                            <li><a href="piscina-cep.html#conclusao">Conclusão</a></li>
+                            <li><a href="piscina-cep.html#respostas">Respostas do roteiro</a></li>
+                            <li><a href="piscina-cep.html#limitacoes">Limitações do modelo</a></li>
+                            <li><a href="piscina-cep.html#referencias">Referências</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <p>Projeto Integrador CEP © 2024. Todos os direitos reservados. Desenvolvido com foco em acessibilidade e ciência.</p>
+    <footer class="rodape">
+        <div class="rodape__conteudo">
+            <p class="rodape__nome">Sol, Água e Tecnologia</p>
+            <div class="rodape__colunas">
+                <nav aria-label="Rodapé">
+                    <ul>
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="index.html#ondas">Ondas</a></li>
+                        <li><a href="corpo-negro.html">Corpo Negro</a></li>
+                        <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                        <li><a href="index.html#robotica">Robótica</a></li>
+                        <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                        <li><a href="index.html#sobre">Sobre</a></li>
+                        <li><a href="piscina-cep.html">Piscina do CEP</a></li>
+                        <li><a href="index.html#mapa-do-site">Mapa do site</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    <p><strong>Projeto Integrador CEP</strong>, 3º trimestre</p>
+                    <p>Colégio Estadual do Paraná</p>
+                    <p>Grupo 2</p>
+                    <p>© 2026</p>
+                </div>
+            </div>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

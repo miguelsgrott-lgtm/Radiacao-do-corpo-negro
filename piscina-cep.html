@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A Piscina do CEP | Projeto Integrador CEP</title>
+    <meta name="description" content="Medidas, volume e energia para aquecer a piscina quase olímpica do CEP, perdas de calor, capa térmica, simulador térmico e calculadora.">
+    <meta name="theme-color" content="#050810">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='11' cy='11' r='8' fill='%23FF7626'/%3E%3Cpath d='M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z' fill='%2357C5B6'/%3E%3C/svg%3E">
+    <script>(function(){var d=document.documentElement;d.classList.add('js');try{var p=JSON.parse(localStorage.getItem('cep-preferencias')||'{}');for(var k in p){if(/^(tamanho|linhas|letras|contraste|dislexia|movimento)$/.test(k))d.setAttribute('data-'+k,p[k]);}}catch(e){}})();</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-pagina="piscina">
+    <header class="cabecalho" data-menu="fechado">
+        <a class="pular" href="#conteudo">Pular para o conteúdo principal</a>
+        <div class="barra-progresso" id="barraProgresso" aria-hidden="true"></div>
+        <div class="cabecalho__barra">
+            <a class="marca" href="index.html">
+                <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8" fill="#FF7626"/><path d="M22 10c4 5 7 8.300 7 12a7 7 0 0 1-14 0c0-3.700 3-7 7-12z" fill="#57C5B6"/></svg>
+                <span>CEP Integrador</span>
+            </a>
+            <button id="botaoMenu" class="botao-barra" type="button" aria-expanded="false" aria-controls="navPrincipal">Menu</button>
+            <nav id="navPrincipal" class="nav-principal" aria-label="Principal">
+                <ul class="menu">
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#ondas">Ondas</a></li>
+                    <li><a href="corpo-negro.html">Corpo Negro</a></li>
+                    <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                    <li><a href="index.html#robotica">Robótica</a></li>
+                    <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a class="menu__destaque" href="piscina-cep.html" aria-current="page">Piscina do CEP</a></li>
+                </ul>
+            </nav>
+            <div class="acessibilidade">
+                <button id="botaoAcessibilidade" class="botao-barra" type="button" aria-expanded="false" aria-controls="painelAcessibilidade">Acessibilidade</button>
+                <div id="painelAcessibilidade" class="painel" role="group" aria-labelledby="painelTitulo" hidden>
+                    <p id="painelTitulo" class="painel__titulo">Ajustes de leitura</p>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Tamanho da fonte</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-tamanho" value="100" checked>100%</label>
+                            <label><input type="radio" name="pref-tamanho" value="125">125%</label>
+                            <label><input type="radio" name="pref-tamanho" value="150">150%</label>
+                            <label><input type="radio" name="pref-tamanho" value="175">175%</label>
+                            <label><input type="radio" name="pref-tamanho" value="200">200%</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre linhas</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-linhas" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-linhas" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-linhas" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-preferencia-grupo>
+                        <legend>Espaço entre letras</legend>
+                        <div class="opcoes">
+                            <label><input type="radio" name="pref-letras" value="normal" checked>Normal</label>
+                            <label><input type="radio" name="pref-letras" value="amplo">Amplo</label>
+                            <label><input type="radio" name="pref-letras" value="maximo">Máximo</label>
+                        </div>
+                    </fieldset>
+                    <div class="alternancias">
+                        <button class="alternancia" type="button" data-preferencia="contraste" data-valor="alto" data-nome="Alto contraste" aria-pressed="false">Alto contraste</button>
+                        <button class="alternancia" type="button" data-preferencia="dislexia" data-valor="ativo" data-nome="Fonte para dislexia" aria-pressed="false">Fonte para dislexia</button>
+                        <button class="alternancia" type="button" data-preferencia="movimento" data-valor="reduzido" data-nome="Reduzir movimento" aria-pressed="false">Reduzir movimento</button>
+                    </div>
+                    <p class="painel__acoes">
+                        <button id="abrirVlibras" class="botao botao--pequeno" type="button">Abrir VLibras</button>
+                        <button id="restaurarPreferencias" class="botao botao--secundario botao--pequeno" type="button">Restaurar padrão</button>
+                    </p>
+                    <p class="painel__aviso">Os ajustes ficam guardados neste navegador e valem nas três páginas.</p>
+                </div>
+            </div>
+        </div>
+        <p id="anuncioGlobal" class="so-leitor" role="status"></p>
+    </header>
+
+    <main id="conteudo" tabindex="-1">
+        <noscript><p class="aviso">Os simuladores e os ajustes de leitura precisam de JavaScript. Todo o texto continua disponível.</p></noscript>
+        <section aria-labelledby="piscinaTitulo">
+            <div class="capa__cena">
+                <canvas id="cenaCapa" data-cena="piscina" role="img" aria-label="Cena animada: perfil da piscina com a parte rasa, a rampa e a parte funda, vapor subindo da superfície e ondas longas de infravermelho saindo da água."></canvas>
+                <button id="pausarCena" class="botao botao--pequeno botao--sobre-cena capa__pausa so-js" type="button">Pausar animação</button>
+            </div>
+            <div class="capa__texto">
+                <h1 id="piscinaTitulo">A piscina do CEP</h1>
+                <div class="capa__apoio">
+                    <p>Aquecer mais de 4 milhões de litros de água: quanta energia isso exige e para onde o calor escapa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="problema" class="faixa campo-noite" aria-labelledby="problemaTitulo">
+            <div class="largura eixo">
+                <h2 id="problemaTitulo">O problema</h2>
+                <div class="eixo__nota">
+                    <p class="numero-grande">74.663,5 kWh</p>
+                    <p>Energia para levar toda a água de 20 °C a 35 °C, a meta do cenário do grupo.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">O grupo quer aquecer a piscina quase olímpica do Colégio Estadual do Paraná para permitir o uso durante todo o ano letivo, com acessibilidade e soluções sustentáveis sempre que possível.</p>
+                    <p>O desafio tem duas partes. A primeira é colocar energia em uma massa enorme de água. A segunda é mantê-la lá, porque uma superfície de mais de mil metros quadrados troca calor o tempo todo com o ar e com a vizinhança.</p>
+                    <p>O coletor solar, a capa térmica e a automação com sensores descritos aqui são <strong>propostas do grupo</strong>. Nada disso é apresentado como instalado no colégio, e os valores de clima são cenários para estudo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="medidas" class="faixa" aria-labelledby="medidasTitulo">
+            <div class="largura eixo">
+                <h2 id="medidasTitulo">As medidas do projeto</h2>
+                <div class="eixo__nota">
+                    <dl class="fatos">
+                        <dt>Comprimento</dt><dd>49,8 m</dd>
+                        <dt>Largura</dt><dd>21,5 m</dd>
+                        <dt>Parte rasa</dt><dd>2,2 m</dd>
+                        <dt>Parte funda</dt><dd>5,8 m</dd>
+                        <dt>Superfície</dt><dd>1.070,7 m²</dd>
+                        <dt>Volume</dt><dd>4.282,8 m³</dd>
+                    </dl>
+                    <figure class="diagrama">
+                        <svg viewBox="0 0 720 340" role="img" aria-labelledby="plantaTitulo plantaDesc">
+                            <title id="plantaTitulo">Vista de cima da piscina</title>
+                            <desc id="plantaDesc">Um retângulo de 49,8 metros de comprimento por 21,5 metros de largura, com área de 1.070,7 metros quadrados.</desc>
+                            <rect x="40" y="40" width="640" height="276" style="fill:var(--water-blue);stroke:var(--turquoise)" stroke-width="4"/>
+                            <text class="svg-titulo" x="360" y="186" font-size="36" text-anchor="middle" style="fill:#FFFFFF">1.070,7 m²</text>
+                            <text class="svg-texto" x="360" y="28" font-size="26" text-anchor="middle">49,8 m</text>
+                            <text class="svg-texto" x="26" y="178" font-size="26" text-anchor="middle" transform="rotate(-90 26 178)">21,5 m</text>
+                        </svg>
+                        <figcaption>Vista de cima.</figcaption>
+                    </figure>
+                </div>
+                <div class="eixo__corpo">
+                    <p>O fundo não é plano. O grupo modelou o perfil lateral em três trechos iguais: <strong>um terço raso, um terço em rampa e um terço fundo</strong>.</p>
+                    <figure class="diagrama">
+                        <svg viewBox="0 0 720 300" role="img" aria-labelledby="perfilTitulo perfilDesc">
+                            <title id="perfilTitulo">Perfil lateral da piscina</title>
+                            <desc id="perfilDesc">Corte lateral: à esquerda, 2,2 metros de profundidade; no meio, uma rampa; à direita, 5,8 metros. A área está dividida em um retângulo de 109,56 metros quadrados em toda a extensão, um bloco de 59,76 metros quadrados sob o terço fundo e um triângulo de 29,88 metros quadrados sob a rampa.</desc>
+                            <rect x="40" y="50" width="640" height="79" style="fill:var(--water-blue)"/>
+                            <rect x="466.7" y="129" width="213.3" height="130" style="fill:var(--turquoise)"/>
+                            <path d="M253.3 129H466.700V259Z" style="fill:var(--solar-yellow)"/>
+                            <path d="M40 50H680V259H466.700L253.300 129H40Z" fill="none" stroke-width="3" style="stroke:var(--tinta)"/>
+                            <text class="svg-titulo" x="360" y="100" font-size="26" text-anchor="middle" style="fill:#FFFFFF">109,56 m²</text>
+                            <text class="svg-titulo" x="573" y="202" font-size="26" text-anchor="middle" style="fill:#050810">59,76 m²</text>
+                            <text class="svg-titulo" x="400" y="160" font-size="22" text-anchor="middle" style="fill:#050810">29,88 m²</text>
+                            <text class="svg-texto" x="360" y="36" font-size="24" text-anchor="middle">49,8 m</text>
+                            <text class="svg-texto" x="146" y="160" font-size="24" text-anchor="middle">raso: 2,2 m</text>
+                            <text class="svg-texto" x="300" y="222" font-size="24" text-anchor="middle">rampa</text>
+                            <text class="svg-texto" x="573" y="290" font-size="24" text-anchor="middle">fundo: 5,8 m</text>
+                        </svg>
+                        <figcaption>Corte lateral, com a profundidade exagerada para melhor leitura.</figcaption>
+                    </figure>
+                    <p>O grupo somou a área do perfil em três blocos geométricos: um <strong>retângulo</strong> de 49,8 m × 2,2 m, um <strong>bloco</strong> de 16,6 m × 3,6 m sob o terço fundo e um <strong>triângulo</strong> de 16,6 m × 3,6 m ÷ 2 sob a rampa. Calculando trecho por trecho, raso, rampa e fundo dão 36,52 + 66,40 + 96,28, e o total é o mesmo: 199,2 m².</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculo" class="faixa campo-azul" aria-labelledby="calculoTitulo">
+            <div class="largura eixo">
+                <h2 id="calculoTitulo">Volume e energia, passo a passo</h2>
+                <div class="eixo__nota">
+                    <form id="formCalculo">
+                        <fieldset class="sim__controles">
+                            <legend><strong>Temperatura final do cenário</strong></legend>
+                            <label class="verificacao"><input type="radio" name="calcMeta" value="35" checked>35 °C, cenário do grupo</label>
+                            <label class="verificacao"><input type="radio" name="calcMeta" value="28">28 °C, outro cenário</label>
+                        </fieldset>
+                    </form>
+                    <p class="nota">Os dois são cenários de cálculo. Este site não indica qual temperatura é a recomendada.</p>
+                    <p id="calcResumo" class="so-leitor" aria-live="polite"></p>
+                </div>
+                <div class="eixo__corpo">
+                    <ol class="passos">
+                        <li><strong>Área do perfil</strong><span class="conta">109,56 + 59,76 + 29,88 = 199,2 m²</span></li>
+                        <li><strong>Volume</strong><span class="conta">199,2 m² × 21,5 m = 4.282,8 m³</span></li>
+                        <li><strong>Massa</strong>Com 1.000 kg por m³: <span class="conta">4.282.800 kg</span>, ou 4.282.800.000 g</li>
+                        <li><strong>Variação de temperatura</strong><span class="conta">ΔT = <span data-calc="meta">35</span> − 20 = <span data-calc="delta">15</span> °C</span></li>
+                        <li><strong>Energia, com Q = m · c · ΔT</strong><span class="conta">4.282.800.000 g × 4,184 J/(g·°C) × <span data-calc="delta">15</span> °C = <span data-calc="joules">268.788.528.000</span> J</span></li>
+                        <li><strong>Em quilowatts-hora</strong>Dividindo por 3.600.000: <span class="conta"><span data-calc="kwh">74.663,5</span> kWh</span></li>
+                    </ol>
+                    <p>Para dar escala: mesmo com <strong>500 kW líquidos</strong> entrando na água o tempo todo, a temperatura subiria só 0,1005 °C por hora, e o aquecimento levaria <strong data-calc="taxa">6,2 dias</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="infravermelho" class="faixa" aria-labelledby="ivTitulo">
+            <div class="largura eixo">
+                <h2 id="ivTitulo">Por que a água emite no infravermelho e o Sol no visível</h2>
+                <div class="eixo__nota">
+                    <dl class="fatos">
+                        <dt>Sol, 5.772 K</dt><dd>502 nm</dd>
+                        <dt>Água a 35 °C</dt><dd>9,40 µm</dd>
+                        <dt>Água a 28 °C</dt><dd>9,62 µm</dd>
+                        <dt>Água a 20 °C</dt><dd>9,88 µm</dd>
+                    </dl>
+                </div>
+                <div class="eixo__corpo">
+                    <p>A lei de Wien diz que o pico de emissão é inversamente proporcional à temperatura em kelvin. O Sol é cerca de 19 vezes mais quente que a água da piscina, então seu pico fica em onda cerca de 19 vezes mais curta.</p>
+                    <p>Isso muda o caminho da energia. A luz solar visível atravessa a água e é absorvida ao longo da profundidade. Já a emissão térmica nasce em uma camada muito fina: a temperatura medida no infravermelho representa os primeiros 10 a 20 µm da água. Para perder calor por radiação, a piscina depende do que chega à superfície.</p>
+                    <p><a href="corpo-negro.html#sol-agua">Compare as duas curvas na página do corpo negro</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="emitida-liquida" class="faixa campo-noite" aria-labelledby="emitidaTitulo">
+            <div class="largura eixo">
+                <h2 id="emitidaTitulo">Energia emitida não é perda líquida</h2>
+                <div class="eixo__nota">
+                    <p class="formula"><span class="formula__conta">q = ε · σ · (T<sub>água</sub>⁴ − T<sub>viz</sub>⁴)</span><span class="formula__texto">Perda radiativa líquida por m², com temperaturas em kelvin.</span></p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">A água a 35 °C emite cerca de 486 W/m². Mas ela também recebe radiação do que está em volta.</p>
+                    <div class="barras" role="img" aria-label="Com água a 35 graus, emissividade 0,95 e vizinhança a 20 graus: emitida 485,72, recebida 397,83 e perda líquida 87,89 watts por metro quadrado.">
+                        <div class="barras__grupo">
+                            <div class="barra" data-tom="destaque"><span>Emitida pela água</span><span class="barra__valor">485,72 W/m²</span><span class="barra__trilho"><span class="barra__preenchido" style="width:100%"></span></span></div>
+                            <div class="barra" data-tom="neutro"><span>Recebida da vizinhança</span><span class="barra__valor">397,83 W/m²</span><span class="barra__trilho"><span class="barra__preenchido" style="width:81.9%"></span></span></div>
+                            <div class="barra"><span>Perda líquida</span><span class="barra__valor">87,89 W/m²</span><span class="barra__trilho"><span class="barra__preenchido" style="width:18.1%"></span></span></div>
+                        </div>
+                    </div>
+                    <p>Com ε = 0,95 e vizinhança a 20 °C, sobra uma perda de 87,89 W/m², cerca de cinco vezes e meia menor que a emissão. Na piscina inteira, são <strong>94,1 kW</strong>. Usar só σT⁴ como perda seria um erro grande. Para repor esses 94,1 kW com sol de 600 W/m² e coletor com eficiência de 60%, seriam precisos cerca de <strong>261 m²</strong> de coletor.</p>
+                    <p>A vizinhança faz diferença. À noite, sob céu limpo, a água troca radiação com um céu bem mais frio que o ar. Com ar a 20 °C, a fórmula de Swinbank indica um céu equivalente a cerca de 4,5 °C, e a perda sobe para perto de 165 W/m².</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="sistema" class="faixa" aria-labelledby="sistemaTitulo2">
+            <div class="largura eixo">
+                <h2 id="sistemaTitulo2">Esquema do sistema de aquecimento solar</h2>
+                <div class="eixo__nota">
+                    <p>A física por trás do aquecimento da piscina passa por estas cinco partes da proposta do grupo. Selecione cada uma para ver sua função e o princípio físico envolvido.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <div class="sistema" role="group" aria-label="Partes do sistema de aquecimento solar">
+                        <button type="button" data-componente="coletor" aria-pressed="true"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="9" fill="currentColor"/></svg>Coletor solar</button>
+                        <button type="button" data-componente="bomba" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4a12 12 0 1 0 12 12h-5a7 7 0 1 1-7-7z" fill="currentColor"/></svg>Bomba</button>
+                        <button type="button" data-componente="sensores" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="13" y="3" width="6" height="18" fill="currentColor"/><circle cx="16" cy="23" r="6" fill="currentColor"/></svg>Sensores</button>
+                        <button type="button" data-componente="piscina" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3c5 7 9 11 9 16a9 9 0 0 1-18 0c0-5 4-9 9-16z" fill="currentColor"/></svg>Piscina</button>
+                        <button type="button" data-componente="capa" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="3" y="12" width="26" height="8" fill="currentColor"/></svg>Capa térmica</button>
+                    </div>
+                    <div id="sistemaInfo" class="sistema__info" role="status">
+                        <h3 id="sistemaTitulo">Coletor solar térmico</h3>
+                        <p id="sistemaTexto">Uma superfície escura de alta absortância recebe a radiação solar, visível e infravermelha, e a transforma em energia térmica, que aquece a água que circula por dentro. Não é um corpo negro perfeito. Veja na página do corpo negro por que nem sempre convém imitar um.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="perdas" class="faixa campo-noite" aria-labelledby="perdasTitulo">
+            <div class="largura">
+                <h2 id="perdasTitulo" class="simulador__titulo">Perdas térmicas e a capa</h2>
+                <p class="simulador__observe">A piscina perde calor por <strong>evaporação</strong>, <strong>convecção</strong>, <strong>radiação infravermelha</strong> e condução. O Departamento de Energia dos EUA aponta a evaporação como, de longe, a maior fonte de perda. A <strong>capa térmica</strong> não aquece a água: ela reduz a evaporação, diminui a convecção com o ar frio e reduz a perda de calor por radiação noturna.</p>
+                <div class="comparativo-capa" aria-label="Comparativo visual com e sem capa" role="group">
+                    <div>
+                        <h3>Sem capa</h3>
+                        <div class="agua-cena" aria-hidden="true"><span class="vapor"></span><span class="vapor"></span><span class="vapor"></span></div>
+                        <p>Alta evaporação e resfriamento rápido à noite. Cada litro evaporado leva cerca de 2,4 milhões de joules.</p>
+                    </div>
+                    <div>
+                        <h3>Com capa</h3>
+                        <div class="agua-cena agua-cena--capa" aria-hidden="true"></div>
+                        <p>Evaporação mínima e conservação eficiente do calor. A barreira segura o vapor e dificulta a passagem de calor.</p>
+                    </div>
+                </div>
+                <p class="simulador__observe"><strong>O que observar:</strong> compare o tamanho das barras e veja quanto a radiação representa no total. Depois troque a vizinhança para céu claro.</p>
+                <form id="simPerdas" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do comparativo de perdas</legend>
+                        <div class="campo"><label for="pdAgua">Temperatura da água</label><select id="pdAgua"><option value="35" selected>35 °C, cenário do grupo</option><option value="28">28 °C, outro cenário</option></select></div>
+                        <div class="campo"><label for="pdCeu">Vizinhança radiativa</label><select id="pdCeu"><option value="ar" selected>Igual ao ar, 20 °C</option><option value="claro">Céu claro, cerca de 4,5 °C</option></select></div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                        <dl class="resultados">
+                            <div><dt>Radiação no total sem capa</dt><dd id="pdParcela">12%</dd></div>
+                            <div><dt>Redução com a capa</dt><dd id="pdReducao">81%</dd></div>
+                            <div><dt>Evaporação sem capa</dt><dd id="pdLitros">19,9 mil L/dia</dd></div>
+                        </dl>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div id="pdBarras" class="barras"></div>
+                        <p id="pdResumo" class="sim__resumo" aria-live="polite"></p>
+                        <p class="nota">Cenário: ar a 20 °C, umidade de 60%, vento de 1 m/s, água parada. Hipóteses da capa: 90% menos evaporação e resistência térmica de 0,1 m²·K/W.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="pergunta-capa" class="faixa campo-sol" aria-labelledby="perguntaCapa">
+            <div class="largura">
+                <h2 id="perguntaCapa" class="ficha__pergunta">A piscina emite infravermelho à noite. Isso justifica a capa térmica?</h2>
+                <div class="ficha">
+                    <div>
+                        <h3>Análise física</h3>
+                        <p>A emissão é real: a 35 °C, a superfície emite cerca de 486 W/m². O que importa, porém, é o saldo com a vizinhança: 87,89 W/m² diante de um ambiente a 20 °C, e perto de 165 W/m² sob céu noturno limpo.</p>
+                        <p>No mesmo cenário, com ar a 20 °C, umidade de 60% e vento de 1 m/s, a evaporação estimada é de cerca de 521 W/m² e a convecção, de 115 W/m². A radiação pesa, mas costuma não ser a maior parcela. A capa age principalmente sobre a evaporação e também reduz as demais perdas.</p>
+                    </div>
+                    <div>
+                        <h3>Resposta</h3>
+                        <p class="ficha__resposta">Justifica em parte. A perda noturna por infravermelho existe, mas o argumento mais forte para a capa é a evaporação. Ela age em mais de uma perda ao mesmo tempo.</p>
+                    </div>
+                    <div>
+                        <h3>Limites</h3>
+                        <p>Durante o dia, a capa pode reduzir o ganho solar: de 5% a 15% com plástico-bolha transparente e de 20% a 40% com capa opaca. Colocar e retirar uma capa em mais de mil metros quadrados exige operação e segurança, e custo e acessibilidade dessa operação não foram avaliados.</p>
+                    </div>
+                </div>
+                <p class="nota">Fontes: <a href="https://web.archive.org/web/20250110214936/https://www.energy.gov/energysaver/swimming-pool-covers">Departamento de Energia dos EUA, capas de piscina</a>; <a href="https://www.epa.gov/system/files/documents/2022-09/ws-outdoor-pool-guide.pdf">EPA WaterSense, guia de piscinas</a>.</p>
+            </div>
+        </section>
+
+        <section id="simulador-termico" class="faixa campo-noite" aria-labelledby="termicoTitulo">
+            <div class="largura">
+                <h2 id="termicoTitulo" class="simulador__titulo">Simulador de balanço térmico</h2>
+                <p class="simulador__observe"><strong>O que observar:</strong> a temperatura muda devagar, porque a massa de água é enorme. Compare as duas linhas e veja como a capa altera o saldo ao longo dos dias.</p>
+                <p class="formula"><span class="formula__conta">m · c · dT/dt = P<sub>entrada</sub> − P<sub>radiação</sub> − P<sub>evaporação</sub> − P<sub>convecção</sub></span><span class="formula__texto">Modelo simplificado para fins educacionais, aplicado à massa de água do projeto. As condições do ar e do Sol são um cenário.</span></p>
+                <form id="simTermico" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Controles do simulador térmico</legend>
+                        <div class="campo"><label for="teInicial">Temperatura inicial da água</label><output id="teInicialSaida" for="teInicial" aria-live="off">20 °C</output><input id="teInicial" type="range" min="10" max="35" step="1" value="20"></div>
+                        <div class="campo"><label for="teAr">Temperatura do ar</label><output id="teArSaida" for="teAr" aria-live="off">20 °C</output><input id="teAr" type="range" min="5" max="35" step="1" value="20"></div>
+                        <div class="campo"><label for="teColetor">Área de coletores</label><output id="teColetorSaida" for="teColetor" aria-live="off">261 m²</output><input id="teColetor" type="range" min="0" max="2000" step="1" value="261"></div>
+                        <div class="campo"><label for="teExtra">Aquecimento adicional</label><output id="teExtraSaida" for="teExtra" aria-live="off">0 kW</output><input id="teExtra" type="range" min="0" max="2000" step="50" value="0"></div>
+                        <div class="campo"><label for="teDias">Duração</label><output id="teDiasSaida" for="teDias" aria-live="off">7 dias</output><input id="teDias" type="range" min="1" max="30" step="1" value="7"></div>
+                        <div class="campo"><label for="teMeta">Meta da água</label><select id="teMeta"><option value="28" selected>28 °C, outro cenário</option><option value="35">35 °C, cenário do grupo</option></select></div>
+                        <div class="campo"><label for="teCapa">Uso da capa na linha "com capa"</label><select id="teCapa"><option value="noite" selected>À noite, das 18 h às 8 h</option><option value="sempre">O tempo todo</option></select></div>
+                        <details>
+                            <summary>Mais condições do cenário</summary>
+                            <div class="details__corpo sim__controles">
+                                <div class="campo"><label for="teUmidade">Umidade do ar</label><output id="teUmidadeSaida" for="teUmidade" aria-live="off">70%</output><input id="teUmidade" type="range" min="30" max="100" step="5" value="70"></div>
+                                <div class="campo"><label for="teVento">Vento na superfície</label><output id="teVentoSaida" for="teVento" aria-live="off">1,0 m/s</output><input id="teVento" type="range" min="0" max="5" step="0.5" value="1"></div>
+                                <div class="campo"><label for="teSol">Sol ao meio-dia</label><output id="teSolSaida" for="teSol" aria-live="off">600 W/m²</output><input id="teSol" type="range" min="0" max="1000" step="50" value="600"></div>
+                                <div class="campo"><label for="teEficiencia">Eficiência do coletor</label><output id="teEficienciaSaida" for="teEficiencia" aria-live="off">60%</output><input id="teEficiencia" type="range" min="20" max="80" step="5" value="60"></div>
+                                <div class="campo"><label for="teEmissividade">Emissividade da água</label><output id="teEmissividadeSaida" for="teEmissividade" aria-live="off">0,95</output><input id="teEmissividade" type="range" min="0.9" max="1" step="0.01" value="0.95"></div>
+                                <div class="campo"><label for="teCeu">Vizinhança radiativa</label><select id="teCeu"><option value="claro" selected>Céu claro</option><option value="ar">Igual ao ar</option></select></div>
+                                <div class="campo"><label for="teUso">Uso da piscina</label><select id="teUso"><option value="parada" selected>Água parada</option><option value="emUso">Com banhistas</option></select></div>
+                            </div>
+                        </details>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="tela">
+                            <canvas id="graficoTermico" role="img" aria-label="Gráfico da temperatura da água ao longo dos dias, com uma linha sem capa e outra com capa." aria-describedby="teResumo"></canvas>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Final sem capa</dt><dd id="teFinalSem">—</dd></div>
+                            <div><dt>Final com capa</dt><dd id="teFinalCom">—</dd></div>
+                            <div><dt>Evaporação sem capa, por dia</dt><dd id="teLitrosSem">—</dd></div>
+                            <div><dt>Evaporação com capa, por dia</dt><dd id="teLitrosCom">—</dd></div>
+                        </dl>
+                        <p id="teResumo" class="sim__resumo" aria-live="polite"></p>
+                        <h3 class="titulo-registro">Potências médias no período</h3>
+                        <div id="teBarras" class="barras"></div>
+                        <details>
+                            <summary>Ver a temperatura dia a dia em tabela</summary>
+                            <div class="details__corpo rolagem" tabindex="0" role="region" aria-label="Temperatura da água por dia">
+                                <table>
+                                    <thead><tr><th scope="col" class="numero">Dia</th><th scope="col" class="numero">Sem capa (°C)</th><th scope="col" class="numero">Com capa (°C)</th></tr></thead>
+                                    <tbody id="teTabela"></tbody>
+                                </table>
+                            </div>
+                        </details>
+                        <details>
+                            <summary>Como o modelo calcula</summary>
+                            <div class="details__corpo">
+                                <p><strong>Radiação:</strong> perda líquida ε σ (T<sub>água</sub>⁴ − T<sub>viz</sub>⁴). O céu claro vem da fórmula de Swinbank.</p>
+                                <p><strong>Evaporação:</strong> q = (0,089 + 0,0782 v)(p<sub>água</sub> − p<sub>ar</sub>), a correlação da ASHRAE em unidades do SI, com pressões em Pa e vento v em m/s. Ela é multiplicada por 0,74 para água parada ou 1,26 com banhistas, conforme medições de Smith e colegas. A pressão de vapor usa a fórmula de Magnus.</p>
+                                <p><strong>Convecção:</strong> razão de Bowen, com coeficiente de 6,1 × 10⁻⁴ vezes a pressão atmosférica.</p>
+                                <p><strong>Entrada:</strong> o Sol segue meia senoide das 6 h às 18 h. A água absorve 80% da radiação, valor central da faixa de 75% a 85% citada pelo Departamento de Energia dos EUA. Coletores e aquecedor param ao atingir a meta.</p>
+                                <p><strong>Capa:</strong> hipóteses de 90% menos evaporação, resistência térmica de 0,1 m²·K/W e 15% menos ganho solar quando colocada de dia.</p>
+                            </div>
+                        </details>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="calculadora" class="faixa" aria-labelledby="calculadoraTitulo">
+            <div class="largura">
+                <h2 id="calculadoraTitulo" class="simulador__titulo">Calculadora da piscina do CEP</h2>
+                <p class="simulador__observe"><strong>O que observar:</strong> aproxime a temperatura da vizinhança da temperatura da água e veja a perda líquida diminuir, mesmo com a emissão quase igual. Esta conta considera só a radiação.</p>
+                <form id="formCalculadora" class="sim">
+                    <fieldset class="sim__controles">
+                        <legend class="so-leitor">Dados da calculadora</legend>
+                        <div class="grupo-botoes" role="group" aria-label="Cenários de temperatura da água">
+                            <button class="botao-opcao" type="button" data-meta="35" aria-pressed="true">35 °C, cenário do grupo</button>
+                            <button class="botao-opcao" type="button" data-meta="28" aria-pressed="false">28 °C, outro cenário</button>
+                        </div>
+                        <div class="campo"><label for="caAgua">Temperatura da água (°C)</label><input id="caAgua" type="number" min="0" max="45" step="0.1" value="35" inputmode="decimal" aria-describedby="caAguaErro"><p id="caAguaErro" class="erro" hidden>Use um valor de 0 a 45 °C.</p></div>
+                        <div class="campo"><label for="caAmbiente">Temperatura da vizinhança (°C)</label><input id="caAmbiente" type="number" min="-40" max="45" step="0.1" value="20" inputmode="decimal" aria-describedby="caAmbienteErro"><p id="caAmbienteErro" class="erro" hidden>Use um valor de −40 a 45 °C.</p></div>
+                        <div class="campo"><label for="caEmissividade">Emissividade da água</label><input id="caEmissividade" type="number" min="0.5" max="1" step="0.01" value="0.95" inputmode="decimal" aria-describedby="caEmissividadeErro"><p id="caEmissividadeErro" class="erro" hidden>Use um valor de 0,5 a 1.</p></div>
+                        <div class="campo"><label for="caPotencia">Potência de aquecimento (kW)</label><input id="caPotencia" type="number" min="0" max="10000" step="10" value="500" inputmode="decimal" aria-describedby="caPotenciaErro"><p id="caPotenciaErro" class="erro" hidden>Use um valor de 0 a 10.000 kW.</p></div>
+                        <div class="campo"><label for="caInicial">Temperatura inicial da água (°C)</label><input id="caInicial" type="number" min="0" max="45" step="0.1" value="20" inputmode="decimal" aria-describedby="caInicialErro"><p id="caInicialErro" class="erro" hidden>Use um valor de 0 a 45 °C.</p></div>
+                        <div class="campo"><label for="caSol">Irradiância no coletor (W/m²)</label><input id="caSol" type="number" min="100" max="1200" step="10" value="600" inputmode="decimal" aria-describedby="caSolErro"><p id="caSolErro" class="erro" hidden>Use um valor de 100 a 1.200 W/m².</p></div>
+                        <div class="campo"><label for="caEficiencia">Eficiência do coletor (de 0 a 1)</label><input id="caEficiencia" type="number" min="0.1" max="1" step="0.01" value="0.6" inputmode="decimal" aria-describedby="caEficienciaErro"><p id="caEficienciaErro" class="erro" hidden>Use um valor de 0,1 a 1.</p></div>
+                        <p class="sim__acoes"><button class="botao botao--secundario botao--pequeno" type="reset">Restaurar valores</button></p>
+                    </fieldset>
+                    <div class="sim__palco">
+                        <div class="rolagem" tabindex="0" role="region" aria-label="Radiação da superfície">
+                            <table>
+                                <caption>Radiação na superfície de 1.070,7 m²</caption>
+                                <thead><tr><th scope="col">Parcela</th><th scope="col" class="numero">Por m²</th><th scope="col" class="numero">Piscina inteira</th></tr></thead>
+                                <tbody>
+                                    <tr><th scope="row">Emitida pela água</th><td class="numero" id="caEmitida" data-ca>485,72 W/m²</td><td class="numero" id="caEmitidaT" data-ca>520,1 kW</td></tr>
+                                    <tr><th scope="row">Recebida da vizinhança</th><td class="numero" id="caRecebida" data-ca>397,83 W/m²</td><td class="numero" id="caRecebidaT" data-ca>426,0 kW</td></tr>
+                                    <tr><th scope="row">Perda líquida</th><td class="numero" id="caLiquida" data-ca>87,89 W/m²</td><td class="numero" id="caLiquidaT" data-ca>94,1 kW</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <dl class="resultados">
+                            <div><dt>Pico de emissão da água</dt><dd id="caPico" data-ca>9,40 µm</dd></div>
+                            <div><dt>Saldo: aquecimento menos radiação</dt><dd id="caSaldo" data-ca>405,9 kW</dd></div>
+                            <div><dt>Variação da temperatura</dt><dd id="caTaxa" data-ca>0,0815 °C/h</dd></div>
+                            <div><dt>Energia até a temperatura da água</dt><dd id="caEnergiaKWh" data-ca>74.663,5 kWh</dd></div>
+                            <div><dt>Em joules</dt><dd id="caEnergia" data-ca>268.788.528.000 J</dd></div>
+                            <div><dt>Tempo com esse saldo</dt><dd id="caTempo" data-ca>7,7 dias</dd></div>
+                            <div><dt>Coletor para repor a perda</dt><dd id="caColetor" data-ca>261 m²</dd></div>
+                        </dl>
+                        <p id="caResumo" class="sim__resumo" aria-live="polite">A água emite 485,72 W/m² e recebe 397,83 W/m² da vizinhança. A perda líquida por radiação é 87,89 W/m², ou 94,1 kW na piscina inteira.</p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="conclusao" class="faixa campo-turquesa" aria-labelledby="conclusaoTitulo">
+            <div class="largura eixo">
+                <h2 id="conclusaoTitulo">Conclusão: quanto a radiação pesa</h2>
+                <div class="eixo__nota">
+                    <p class="numero-grande">12% a 21%</p>
+                    <p>Parte da perda total que cabe à radiação líquida, com a água a 35 °C, no cenário estudado.</p>
+                </div>
+                <div class="eixo__corpo">
+                    <p class="abertura">A radiação do corpo negro explica por que a água perde energia até no escuro, mas não é a maior saída de calor neste cenário.</p>
+                    <p>Com água a 35 °C, ar a 20 °C, umidade de 60% e vento de 1 m/s, as perdas somam de 775 a 858 kW, conforme a vizinhança. A evaporação responde por 558 kW, a convecção por 123 kW e a radiação líquida por 94 a 177 kW. Com a água a 28 °C, a soma fica entre 428 e 511 kW.</p>
+                    <p>Duas conclusões saem daí. Baixar a meta reduz a energia inicial e as perdas seguintes, e cobrir a piscina ataca justamente a maior delas: no modelo, a capa corta perto de 80% das perdas. Uma cobertura ou capa pode pesar tanto quanto a escolha do aquecedor. Medições no local seriam necessárias para dimensionar qualquer solução.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="respostas" class="faixa" aria-labelledby="respostasTitulo">
+            <div class="largura eixo">
+                <h2 id="respostasTitulo">As três perguntas do roteiro</h2>
+                <div class="eixo__nota"><p>Cada resposta completa traz análise física e limites.</p></div>
+                <div class="eixo__corpo">
+                    <h3>O coletor solar se comporta como corpo negro?</h3>
+                    <p>Sim, como aproximação, ao absorver a luz solar. Mas o melhor coletor emite pouco no infravermelho: é a superfície seletiva. <a href="corpo-negro.html#pergunta-coletor">Ler a resposta completa sobre o coletor</a>.</p>
+                    <h3>A emissão infravermelha justifica a capa?</h3>
+                    <p>Em parte. A perda é real e depende da vizinhança, mas a evaporação costuma pesar mais, e a capa atua nas duas. <a href="#pergunta-capa">Ler a resposta completa sobre a capa</a>.</p>
+                    <h3>O efeito fotoelétrico explica o painel fotovoltaico?</h3>
+                    <p>Só em parte. A ideia de fóton ajuda, mas o painel funciona pelo efeito fotovoltaico em um semicondutor, e sua eletricidade pode alimentar bombas. <a href="index.html#pergunta-fotovoltaico">Ler a resposta completa sobre o painel</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="limitacoes" class="faixa campo-noite" aria-labelledby="limitacoesTitulo">
+            <div class="largura eixo">
+                <h2 id="limitacoesTitulo">Limitações do modelo</h2>
+                <div class="eixo__nota"><p>Os resultados servem para comparar ideias. Não substituem um projeto de engenharia.</p></div>
+                <div class="eixo__corpo">
+                    <ul>
+                        <li><strong>Geometria:</strong> o perfil em três trechos é uma simplificação do fundo real.</li>
+                        <li><strong>Água:</strong> densidade de 1.000 kg/m³ e calor específico constantes, como no cálculo do grupo. Entre 20 °C e 35 °C a densidade real é um pouco menor.</li>
+                        <li><strong>Temperatura única:</strong> o modelo supõe água bem misturada, sem camadas quentes e frias.</li>
+                        <li><strong>Radiação:</strong> emissividade constante e uma só temperatura de vizinhança. Nuvens e prédios ao redor mudariam o resultado.</li>
+                        <li><strong>Evaporação e convecção:</strong> correlações obtidas em outras piscinas. O vento na superfície da água é diferente do vento medido em estações.</li>
+                        <li><strong>Capa:</strong> os efeitos usados são hipóteses de estudo, não medidas de um produto.</li>
+                        <li><strong>Clima:</strong> sol, ar, umidade e vento são cenários escolhidos para a simulação, não dados medidos em Curitiba.</li>
+                        <li><strong>O que ficou de fora:</strong> condução para o solo e as paredes, tubulações, reposição de água, filtragem, calor dos banhistas e energia da bomba.</li>
+                    </ul>
+                    <nav class="percurso" aria-label="Percurso de leitura, etapa final">
+                        <a rel="prev" href="index.html#sustentabilidade"><span>Anterior</span>Sustentabilidade</a>
+                        <p class="percurso__fim">Esta é a última etapa do percurso. <a href="index.html">Voltar ao início</a></p>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <section id="referencias" class="faixa" aria-labelledby="referenciasTitulo">
+            <div class="largura eixo">
+                <h2 id="referenciasTitulo">Referências</h2>
+                <div class="eixo__nota"><p>Medidas e cálculo inicial: apresentação do Grupo 2. Fontes externas consultadas em novembro de 2026.</p></div>
+                <div class="eixo__corpo">
+                    <ol class="referencias">
+                        <li>U.S. Department of Energy. <a href="https://web.archive.org/web/20250110214936/https://www.energy.gov/energysaver/swimming-pool-covers">Swimming Pool Covers</a> (cópia arquivada): evaporação, economia, reposição de água e absorção solar.</li>
+                        <li>U.S. EPA WaterSense. <a href="https://www.epa.gov/system/files/documents/2022-09/ws-outdoor-pool-guide.pdf">Outdoor pool guide</a>: capas sólidas reduzem a evaporação em mais de 90%.</li>
+                        <li>Smith, C. C.; Jones, R. W.; Löf, G. O. G. <a href="https://www.osti.gov/biblio/653225">Rates of evaporation from swimming pools in active use</a>, 1998: equação da ASHRAE e fatores de 74% e +26%.</li>
+                        <li>Bowen, I. S. <a href="https://doi.org/10.1103/PhysRev.27.779">The ratio of heat losses by conduction and by evaporation from any water surface</a>. Physical Review, 1926.</li>
+                        <li>Swinbank, W. C. <a href="https://doi.org/10.1002/qj.49708938105">Long-wave radiation from clear skies</a>. Quarterly Journal of the Royal Meteorological Society, 1963.</li>
+                        <li>Vömel, H. <a href="https://cires1.colorado.edu/~voemel/vp.html">Saturation vapor pressure formulations</a>: fórmula do guia da Organização Meteorológica Mundial.</li>
+                        <li>Ifremer. <a href="https://cersat.ifremer.fr/Thematics/Sea-Surface-Temperature/Defining-sea-surface-temperature">Defining sea surface temperature</a>: camada de 10 a 20 µm.</li>
+                        <li>Engineering ToolBox. <a href="https://www.engineeringtoolbox.com/emissivity-coefficients-d_447.html">Emissivity coefficients of common materials</a>: emissividade da água.</li>
+                        <li>NIST. <a href="https://physics.nist.gov/cuu/Constants/">Valores CODATA das constantes físicas</a>.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <div class="rodape__conteudo">
+            <p class="rodape__nome">Sol, Água e Tecnologia</p>
+            <div class="rodape__colunas">
+                <nav aria-label="Rodapé">
+                    <ul>
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="index.html#ondas">Ondas</a></li>
+                        <li><a href="corpo-negro.html">Corpo Negro</a></li>
+                        <li><a href="index.html#fotoeletrico">Fotoelétrico</a></li>
+                        <li><a href="index.html#robotica">Robótica</a></li>
+                        <li><a href="index.html#sustentabilidade">Sustentabilidade</a></li>
+                        <li><a href="index.html#sobre">Sobre</a></li>
+                        <li><a href="piscina-cep.html">Piscina do CEP</a></li>
+                        <li><a href="index.html#mapa-do-site">Mapa do site</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    <p><strong>Projeto Integrador CEP</strong>, 3º trimestre</p>
+                    <p>Colégio Estadual do Paraná</p>
+                    <p>Grupo 2</p>
+                    <p>© 2026</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>
